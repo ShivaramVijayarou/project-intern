@@ -46,7 +46,7 @@
     </form>
 </x-guest-layout> --}}
 
-
+{{-- welcome to the new day --}}
 <!DOCTYPE html>
 <html lang="en">
 
