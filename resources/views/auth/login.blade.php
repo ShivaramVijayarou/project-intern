@@ -528,7 +528,8 @@
     <div class="login-container">
         <div class="brand">
             <div class="brand-logo">
-               <img src="{{ asset('uploads/logo_KTM.jpg') }}" alt="Kolej Teknologi Maju Logo" class="w-16 h-16 mx-auto" width="80px" height="80px">
+                <img src="{{ asset('uploads/logo_KTM.jpg') }}" alt="Kolej Teknologi Maju Logo" class="w-16 h-16 mx-auto"
+                    width="80px" height="80px">
             </div>
             <h2>Kolej Teknologi Maju</h2>
             <p>Sign in to your account</p>
@@ -666,15 +667,15 @@
             });
 
             // Social login buttons
-            const socialButtons = document.querySelectorAll('.social-btn');
-            socialButtons.forEach(button => {
-                button.addEventListener('click', function() {
-                    const platform = this.classList[1];
-                    alert(
-                        `Logging in with ${platform.charAt(0).toUpperCase() + platform.slice(1)}...`
-                    );
-                });
-            });
+            // const socialButtons = document.querySelectorAll('.social-btn');
+            //  socialButtons.forEach(button => {
+            //  button.addEventListener('click', function() {
+            //  const platform = this.classList[1];
+            //  alert(
+            //      `Logging in with ${platform.charAt(0).toUpperCase() + platform.slice(1)}...`
+            //   );
+            //  });
+            //  });
         });
     </script>
 </body>
