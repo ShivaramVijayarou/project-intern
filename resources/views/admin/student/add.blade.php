@@ -2,23 +2,29 @@
 
 @section('content')
     <section class="section">
-
         <div class="section-body">
             <div class="card card-primary">
                 <div class="card-header">
                     <h4>Add New Student</h4>
                 </div>
                 <div class="card-body">
-                    {{-- {{ route('admin.student.store') }} --}}
                     <form action="{{ route('admin.students.store') }}" method="POST" enctype="multipart/form-data">
                         @csrf
 
                         {{-- Student Photo --}}
                         <div class="form-group">
-                            <div id="image-preview" class="image-preview">
+                           
+
+                            <div id="image-preview" class="image-preview text-center">
+                                <img id="preview-img" src="{{ asset('uploads/profile.png') }}" alt="Preview"
+                                    class="w-32 h-32 rounded-full object-cover border-4 border-gray-200 shadow mb-2 d-none">
+
                                 <label for="image-upload" id="image-label">Choose Photo</label>
-                                <input type="file" name="photo" id="image-upload" />
+                                <input type="file" name="profileimage" id="image-upload" accept="image/*" />
                             </div>
+                            @error('profileimage')
+                                <small class="text-danger">{{ $message }}</small>
+                            @enderror
                         </div>
 
                         {{-- Student ID --}}
@@ -26,36 +32,55 @@
                             <label>Student ID</label>
                             <input type="text" class="form-control" name="student_id" value="{{ old('student_id') }}"
                                 required>
+                            @error('student_id')
+                                <small class="text-danger">{{ $message }}</small>
+                            @enderror
                         </div>
 
                         {{-- Name --}}
                         <div class="form-group">
                             <label>Full Name</label>
                             <input type="text" class="form-control" name="name" value="{{ old('name') }}" required>
+                            @error('name')
+                                <small class="text-danger">{{ $message }}</small>
+                            @enderror
                         </div>
 
                         {{-- Email --}}
                         <div class="form-group">
                             <label>Email</label>
                             <input type="email" class="form-control" name="email" value="{{ old('email') }}" required>
+                            @error('email')
+                                <small class="text-danger">{{ $message }}</small>
+                            @enderror
                         </div>
 
                         {{-- Phone Number --}}
                         <div class="form-group">
                             <label>Phone Number</label>
-                            <input type="text" class="form-control" name="phoneNo" value="{{ old('phoneNo') }}">
+                            <input type="text" class="form-control" name="phoneNo" value="{{ old('phoneNo') }}"
+                                pattern="[0-9+ ]{8,15}" title="Phone number should be 8-15 digits">
+                            @error('phoneNo')
+                                <small class="text-danger">{{ $message }}</small>
+                            @enderror
                         </div>
 
                         {{-- Address --}}
                         <div class="form-group">
                             <label>Address</label>
                             <textarea class="form-control" name="address" rows="3">{{ old('address') }}</textarea>
+                            @error('address')
+                                <small class="text-danger">{{ $message }}</small>
+                            @enderror
                         </div>
 
                         {{-- IC Number --}}
                         <div class="form-group">
                             <label>IC Number</label>
                             <input type="text" class="form-control" name="ic" value="{{ old('ic') }}" required>
+                            @error('ic')
+                                <small class="text-danger">{{ $message }}</small>
+                            @enderror
                         </div>
 
                         {{-- Status --}}
@@ -66,34 +91,34 @@
                                 <option value="inactive" {{ old('status') == 'inactive' ? 'selected' : '' }}>Inactive
                                 </option>
                             </select>
-
+                            @error('status')
+                                <small class="text-danger">{{ $message }}</small>
+                            @enderror
                         </div>
 
-
                         {{-- Program --}}
-                        {{-- <div class="form-group">
+                        <div class="form-group">
                             <label for="program">Program</label>
                             <select name="program" class="form-control" required>
-                                <option value="elektrik" {{ old('program') == 'kemahiran elektrik' ? 'selected' : '' }}>KEMAHIRAN ELEKTRIK</option>
-                                <option value="mekatronik" {{ old('program') == 'kemahiran mekatronik' ? 'selected' : '' }}>KEMAHIRAN MEKATRONIK</option>
+                                <option value="">-- Select Program --</option>
+                                @foreach ($programs as $program)
+                                    <option value="{{ $program }}"
+                                        {{ old('program') == $program ? 'selected' : '' }}>
+                                        {{ strtoupper($program) }}
+                                    </option>
+                                @endforeach
                             </select>
-                            {{-- <input type="text" class="form-control" name="program" value="{{ old('program') }}" required>
-                        </div> --}}
-
-                        <div class="form-group">
-    <label for="program">Program</label>
-    <select name="program" class="form-control" required>
-        <option value="">-- Select Program --</option>
-        <option value="Kemahiran Elektrik" {{ old('program') == 'Kemahiran Elektrik' ? 'selected' : '' }}>KEMAHIRAN ELEKTRIK</option>
-        <option value="Kemahiran Mekatronik" {{ old('program') == 'Kemahiran Mekatronik' ? 'selected' : '' }}>KEMAHIRAN MEKATRONIK</option>
-
-    </select>
-</div>
+                            @error('program')
+                                <small class="text-danger">{{ $message }}</small>
+                            @enderror
+                        </div>
 
                         {{-- Default Password Note --}}
                         <div class="form-group">
                             <small class="text-muted">
-                                Default password will be <b>student123</b> (student can change later).
+                                Default password will be
+                                <b>{{ config('constants.default_student_password', 'student123') }}</b>
+                                (student can change later).
                             </small>
                         </div>
 
@@ -104,3 +129,14 @@
         </div>
     </section>
 @endsection
+
+@push('scripts')
+    <script>
+        document.getElementById('image-upload').addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                document.getElementById('preview-img').src = URL.createObjectURL(file);
+            }
+        });
+    </script>
+@endpush

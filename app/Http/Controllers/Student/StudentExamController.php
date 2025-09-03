@@ -12,11 +12,12 @@ class StudentExamController extends Controller
     {
         // Assuming your User model has a 'program' field (Elektrik / Mekatronik)
         $studentProgram = Auth::user()->program;
-
+        
         // Get exams for that program only
-        $exams = Exam::where('program', $studentProgram)
-            ->orderBy('exam_date', 'asc')
-            ->get();
+         $exams = Exam::where('program', $studentProgram)
+        ->whereDate('exam_date', '>=', now()) // filter out past exams
+        ->orderBy('exam_date', 'asc')
+        ->get();
 
         return view('student.examination.index', compact('exams', 'studentProgram'));
     }

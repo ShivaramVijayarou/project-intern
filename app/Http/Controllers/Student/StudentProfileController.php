@@ -2,10 +2,13 @@
 
 namespace App\Http\Controllers\Student;
 
+use App\Http\Requests\Admin\ProfilePasswordUpdateRequest;
+use Illuminate\Http\RedirectResponse;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Contracts\View\View;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 
 class StudentProfileController extends Controller
 {
@@ -23,4 +26,19 @@ class StudentProfileController extends Controller
     return view('student.profile.index', compact('student'));
 }
 
+
+function updatePassword(ProfilePasswordUpdateRequest $request): RedirectResponse
+    {
+
+        // dd($request->all());
+        /** @var \App\Models\User $user */
+
+        $user = Auth::user();
+        $user->password = Bcrypt($request->password);
+        $user->save();
+
+        toastr()->success('Password Updated Successfully');
+
+        return redirect()->back();
+    }
 }

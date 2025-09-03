@@ -65,6 +65,12 @@
     <script src="{{ asset('admin/assets/modules/upload-preview/assets/js/jquery.uploadPreview.min.js') }}"></script>
     <script src="{{ asset('admin/assets/js/scripts.js') }}"></script>
     <script src="{{ asset('admin/assets/js/custom.js') }}"></script>
+    <script src="{{ asset('admin/assets/modules/moment.min.js') }}"></script>
+
+
+
+
+
 
     <script>
         toastr.options.progressBar = true;
@@ -75,32 +81,6 @@
         @endif
     </script>
 
-    {{-- <script>
-    const ctx = document.getElementById('programChart').getContext('2d');
-    new Chart(ctx, {
-        type: 'bar',
-        data: {
-            labels: {!! json_encode($programStats->keys()) !!}, // program names
-            datasets: [{
-                label: 'Number of Students',
-                data: {!! json_encode($programStats->values()) !!}, // counts
-                backgroundColor: ['#4e73df', '#1cc88a'], // you can add more colors
-                borderWidth: 1
-            }]
-        },
-        options: {
-            responsive: true,
-            scales: {
-                y: {
-                    beginAtZero: true,
-                    ticks: {
-                        stepSize: 1
-                    }
-                }
-            }
-        }
-    });
-</script> --}}
 
     <script>
         $.uploadPreview({
@@ -114,6 +94,18 @@
         });
     </script>
 
+@push('scripts')
+<script>
+    document.getElementById('image-upload').addEventListener('change', function (e) {
+        const file = e.target.files[0];
+        const preview = document.getElementById('preview-img');
+        if (file) {
+            preview.src = URL.createObjectURL(file);
+            preview.classList.remove('d-none'); // show image when selected
+        }
+    });
+</script>
+@endpush
     @stack('scripts')
 
 

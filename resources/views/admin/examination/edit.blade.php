@@ -21,43 +21,86 @@
                         <label for="program">Program</label>
                         <select name="program" class="form-control" required>
                             <option value="">-- Select Program --</option>
-                            <option value="Kemahiran Elektrik" {{ $exam->program == 'Kemahiran Elektrik' ? 'selected' : '' }}>KEMAHIRAN ELEKTRIK</option>
-                            <option value="Kemahiran Mekatronik" {{ $exam->program == 'Kemahiran Mekatronik' ? 'selected' : '' }}>KEMAHIRAN MEKATRONIK</option>
+                            <option value="Kemahiran Elektrik" {{ old('program', $exam->program) == 'Kemahiran Elektrik' ? 'selected' : '' }}>
+                                KEMAHIRAN ELEKTRIK
+                            </option>
+                            <option value="Kemahiran Mekatronik" {{ old('program', $exam->program) == 'Kemahiran Mekatronik' ? 'selected' : '' }}>
+                                KEMAHIRAN MEKATRONIK
+                            </option>
                         </select>
+                        @error('program')
+                            <small class="text-danger">{{ $message }}</small>
+                        @enderror
                     </div>
 
                     {{-- Course Code --}}
                     <div class="form-group">
                         <label for="course_code">Course Code</label>
-                        <input type="text" class="form-control" name="course_code" value="{{ old('course_code', $exam->course_code) }}" required>
+                        <input type="text" class="form-control" name="course_code"
+                               value="{{ old('course_code', $exam->course_code) }}" required>
+                        @error('course_code')
+                            <small class="text-danger">{{ $message }}</small>
+                        @enderror
                     </div>
 
-                    {{-- Subject --}}
+                    {{-- Course Name --}}
                     <div class="form-group">
                         <label for="course_name">Course Name</label>
-                        <input type="text" class="form-control" name="course_name" value="{{ old('course_name', $exam->course_name) }}" required>
+                        <input type="text" class="form-control" name="course_name"
+                               value="{{ old('course_name', $exam->course_name) }}" required>
+                        @error('course_name')
+                            <small class="text-danger">{{ $message }}</small>
+                        @enderror
                     </div>
 
                     {{-- Exam Date --}}
-                    <div class="form-group">
+                    {{-- <div class="form-group">
                         <label for="exam_date">Exam Date</label>
-                        <input type="date" class="form-control" name="exam_date" value="{{ old('exam_date', $exam->exam_date) }}" required>
-                    </div>
+                        <input type="date" class="form-control" name="exam_date"
+                               value="{{ old('exam_date', $exam->exam_date) }}" required>
+                        @error('exam_date')
+                            <small class="text-danger">{{ $message }}</small>
+                        @enderror
+                    </div> --}}
+                    
+                    <div class="form-group">
+                            <label for="exam_date">Exam Date</label>
+                            <input type="date" class="form-control" name="exam_date"
+                                value="{{ old('exam_date', $exam->exam_date) }}" min="{{ date('Y-m-d') }}" required>
+                            @error('exam_date')
+                                <small class="text-danger">{{ $message }}</small>
+                            @enderror
+                        </div>
 
                     {{-- Exam Time From --}}
                     <div class="form-group">
                         <label for="time_from">Time From</label>
-                        <input type="time" class="form-control" name="time_from" value="{{ old('time_from', $exam->time_from) }}" required>
+                        <input type="time" class="form-control" name="time_from"
+                               value="{{ old('time_from', $exam->time_from) }}" required>
+                        @error('time_from')
+                            <small class="text-danger">{{ $message }}</small>
+                        @enderror
                     </div>
 
                     {{-- Exam Time To --}}
                     <div class="form-group">
                         <label for="time_to">Time To</label>
-                        <input type="time" class="form-control" name="time_to" value="{{ old('time_to', $exam->time_to) }}" required>
+                        <input type="time" class="form-control" name="time_to"
+                               value="{{ old('time_to', $exam->time_to) }}" required>
+                        @error('time_to')
+                            <small class="text-danger">{{ $message }}</small>
+                        @enderror
                     </div>
 
-                    <button class="btn btn-primary" type="submit">Update Exam</button>
-                    <a href="{{ route('admin.exams.index') }}" class="btn btn-secondary">Cancel</a>
+                    {{-- Action Buttons --}}
+                    <div class="form-group d-flex justify-content-between">
+                        <a href="{{ route('admin.exams.index') }}" class="btn btn-secondary">
+                            <i class="fas fa-arrow-left"></i> Cancel
+                        </a>
+                        <button class="btn btn-primary" type="submit">
+                            <i class="fas fa-save"></i> Update Exam
+                        </button>
+                    </div>
                 </form>
             </div>
         </div>

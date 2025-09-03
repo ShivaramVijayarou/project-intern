@@ -23,18 +23,31 @@ class AdminDashboardController extends Controller
 
 
         $totalUsers = User::count();   // count all users
-        $totalExams = Exam::count();
+        $totalExams = Exam::count();   // total number of exam
         $upcomingExams = Exam::whereDate('exam_date', '>=', now())->count(); // future exams
         $todayExams = Exam::whereDate('exam_date', today())->count(); // exams today
-        $programs = Exam::distinct('program')->count();
-        $programStats = Exam::select('program', DB::raw('COUNT(*) as total'))
-            ->groupBy('program')
-            ->pluck('total', 'program');
+        $programs = User::distinct('program')->count();
+
+        // $programStats = User::select('program', DB::raw('COUNT(*) as total'))->groupBy('program')->pluck('total', 'program');
+        // $programStats = DB::table('users')->select('program', DB::raw('count(*) as total'))->groupBy('program')->pluck('total', 'program');
+        $programStats = User::whereNotNull('program')->where('program', '!=', '')->select('program', DB::raw('COUNT(*) as total'))->groupBy('program')->pluck('total', 'program');
+
+        // only students
+        // $ttlStudents = User::where('role', 'user')->count();
+
+
+        // Total students across all programs
+        $totalStudents = $programStats->sum();
+
+        // Convert to percentages for pie/donut
+        $programPercentages = $programStats->map(function ($count) use ($totalStudents) {
+            return round(($count / $totalStudents) * 100, 2);
+        });
 
 
         // return view('admin.dashboard.index', compact('totalUsers'));
 
-        return view('admin.dashboard.index', compact('totalUsers', 'totalExams', 'upcomingExams', 'todayExams', 'programs', 'programStats'));
+        return view('admin.dashboard.index', compact('totalUsers', 'totalExams', 'upcomingExams', 'todayExams', 'programs', 'programStats',  'programPercentages', 'totalStudents'));
     }
 }
 

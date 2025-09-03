@@ -11,7 +11,8 @@ use App\Http\Controllers\Student\StudentDashboardController;
 use App\Http\Controllers\Student\StudentProfileController;
 use App\Http\Controllers\Student\StudentExamController;
 use App\Http\Controllers\Student\StudentNotesController;
-
+use App\Http\Controllers\Auth\PasswordResetLinkController;
+use App\Http\Controllers\Auth\NewPasswordController;
 /*
 |--------------------------------------------------------------------------
 | Default Redirect
@@ -27,9 +28,13 @@ Route::get('/', function () {
 | Dashboard (for all authenticated users)
 |--------------------------------------------------------------------------
 */
-Route::get('/dashboard', function () {
-    return view('student.dashboard.index');
-})->middleware(['auth', 'verified'])->name('dashboard');
+// Route::get('/dashboard', function () {
+//     return view('student.dashboard.index');
+// })->middleware(['auth', 'verified'])->name('dashboard');
+
+Route::get('/dashboard', [StudentDashboardController::class, 'index'])
+    ->middleware(['auth', 'verified', 'role:user'])
+    ->name('dashboard');
 
 /*
 |--------------------------------------------------------------------------
@@ -59,6 +64,8 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::delete('/students/{id}', [StudentController::class, 'destroy'])->name('students.destroy');
     Route::get('/admin/students/{id}/edit', [StudentController::class, 'edit'])->name('admin.students.edit');
     Route::put('/admin/students/{id}', [StudentController::class, 'update'])->name('admin.students.update');
+    
+
 
     // Admin profile
     Route::get('admin/profile', [ProfileController::class, 'index'])->name('admin.profile');
@@ -89,21 +96,23 @@ Route::middleware(['auth', 'role:staff'])->group(function () {
 |--------------------------------------------------------------------------
 */
 Route::middleware(['auth', 'role:user'])->group(function () {
-    Route::get('student/dashboard', [StudentDashboardController::class, 'index'])->name('student.dashboard');
+    // Route::get('/student/dashboard', [StudentDashboardController::class, 'index'])->name('student.dashboard');
     Route::get('student/profile', [StudentProfileController::class, 'index'])->name('student.profile');
+    Route::put('/student/profile/password', [StudentProfileController::class, 'updatePassword'])->name('student.profile.password.update');
     Route::get('student/notes', [StudentNotesController::class, 'index'])->name('student.notes');
    Route::get('/student/exams', [StudentExamController::class, 'index'])->name('student.exams');
 
 
-    // Student Notes (filtered by program)
-    // Route::get('student/notes', function () {
-        // $user = auth()->user(); // logged-in student
-        // $notes = \App\Models\Note::where('program', $user->program)
-        //     ->latest()
-        //     ->get();
-
-        // return view('student.notes.index', compact('notes'));
-    // })->name('student.notes');
-
-        
 });
+
+
+
+// forgot password
+Route::get('/forgot-password', [PasswordResetLinkController::class, 'create'])->name('password.request');
+
+Route::post('/forgot-password', [PasswordResetLinkController::class, 'store'])->name('password.email');
+
+Route::get('/reset-password/{token}', [NewPasswordController::class, 'create'])->name('password.reset');
+
+Route::post('/reset-password', [NewPasswordController::class, 'store'])->name('password.store');
+

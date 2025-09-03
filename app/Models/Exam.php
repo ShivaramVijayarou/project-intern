@@ -16,4 +16,8 @@ class Exam extends Model
     'time_from',
     'time_to',
 ];
+
+protected $casts = [
+    'exam_date' => 'datetime',
+];
 }

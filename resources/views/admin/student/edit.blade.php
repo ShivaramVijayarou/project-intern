@@ -1,107 +1,112 @@
 @extends('admin.layouts.master')
 
 @section('content')
-    <section class="section">
+<section class="section">
+    <div class="section-body">
+        <div class="card card-warning shadow-sm">
+            <div class="card-header">
+                <h4>Edit Student</h4>
+            </div>
 
-        <div class="section-body">
-            <div class="card card-warning">
-                <div class="card-header">
-                    <h4>Edit Student</h4>
-                </div>
-                <div class="card-body">
-                    <form action="{{ route('admin.students.update', $student->id) }}" method="POST"
-                        enctype="multipart/form-data">
-                        @csrf
-                        @method('PUT')
+            <div class="card-body">
+                <form action="{{ route('admin.students.update', $student->id) }}" method="POST" enctype="multipart/form-data">
+                    @csrf
+                    @method('PUT')
 
-                        {{-- Student Photo --}}
-                        <div class="form-group">
-                            <label>Photo</label>
-                            <div class="mb-2">
-                                <img src="{{ asset($student->profileimage ?? 'uploads/profile.png') }}"
-                                    class="img-thumbnail" style="width: 100px; height: 100px; object-fit: cover;">
-                            </div>
-                            <input type="file" name="photo" class="form-control">
-                            <small class="text-muted">Leave empty if you don't want to change the photo.</small>
+                    {{-- Student Photo --}}
+                    <div class="form-group text-center">
+                        <label class="d-block">Photo</label>
+                        <div class="mb-3">
+                            <img id="preview-img"
+                                src="{{ $student->profileimage ? asset('storage/' . $student->profileimage) : asset('uploads/profile.png') }}"
+                                class="rounded-circle border shadow-sm"
+                                style="width: 120px; height: 120px; object-fit: cover;">
                         </div>
+                        <input type="file" name="profileimage" id="image-upload" class="form-control-file" accept="image/*">
+                        <small class="text-muted d-block mt-1">Leave empty if you don’t want to change the photo.</small>
+                    </div>
 
+                    <hr>
+
+                    <div class="row">
                         {{-- Student ID --}}
-                        <div class="form-group">
+                        <div class="form-group col-md-6">
                             <label>Student ID</label>
                             <input type="text" class="form-control" name="student_id"
                                 value="{{ old('student_id', $student->student_id) }}" required>
                         </div>
 
-                        {{-- Name --}}
-                        <div class="form-group">
+                        {{-- Full Name --}}
+                        <div class="form-group col-md-6">
                             <label>Full Name</label>
                             <input type="text" class="form-control" name="name"
                                 value="{{ old('name', $student->name) }}" required>
                         </div>
+                    </div>
 
+                    <div class="row">
                         {{-- Email --}}
-                        <div class="form-group">
+                        <div class="form-group col-md-6">
                             <label>Email</label>
                             <input type="email" class="form-control" name="email"
                                 value="{{ old('email', $student->email) }}" required>
                         </div>
 
                         {{-- Phone Number --}}
-                        <div class="form-group">
+                        <div class="form-group col-md-6">
                             <label>Phone Number</label>
                             <input type="text" class="form-control" name="phoneNo"
                                 value="{{ old('phoneNo', $student->phoneNo) }}">
                         </div>
+                    </div>
 
-                        {{-- Address --}}
-                        <div class="form-group">
-                            <label>Address</label>
-                            <textarea class="form-control" name="address" rows="3">{{ old('address', $student->address) }}</textarea>
-                        </div>
+                    {{-- Address --}}
+                    <div class="form-group">
+                        <label>Address</label>
+                        <textarea class="form-control" name="address" rows="3">{{ old('address', $student->address) }}</textarea>
+                    </div>
 
+                    <div class="row">
                         {{-- IC Number --}}
-                        <div class="form-group">
+                        <div class="form-group col-md-6">
                             <label>IC Number</label>
-                            <input type="text" class="form-control" name="ic" value="{{ old('ic', $student->ic) }}"
-                                required>
+                            <input type="text" class="form-control" name="ic"
+                                value="{{ old('ic', $student->ic) }}" required>
                         </div>
 
                         {{-- Status --}}
-                        <div class="form-group">
-                            <label for="status">Status</label>
+                        <div class="form-group col-md-6">
+                            <label>Status</label>
                             <select name="status" class="form-control" required>
-                                <option value="active" {{ old('status', $student->status) == 'active' ? 'selected' : '' }}>
-                                    Active</option>
-                                <option value="inactive"
-                                    {{ old('status', $student->status) == 'inactive' ? 'selected' : '' }}>Inactive</option>
+                                <option value="active" {{ old('status', $student->status) == 'active' ? 'selected' : '' }}>Active</option>
+                                <option value="inactive" {{ old('status', $student->status) == 'inactive' ? 'selected' : '' }}>Inactive</option>
                             </select>
                         </div>
+                    </div>
 
-                        {{-- Program --}}
-                        {{-- <div class="form-group">
-                            <label>Program</label>
-                            <input type="text" class="form-control" name="program"
-                                   value="{{ old('program', $student->program) }}" required>
-                        </div> --}}
+                    {{-- Program --}}
+                    <div class="form-group">
+                        <label>Program</label>
+                        <select name="program" class="form-control" required>
+                            <option value="">-- Select Program --</option>
+                            <option value="Kemahiran Elektrik" {{ old('program', $student->program) == 'Kemahiran Elektrik' ? 'selected' : '' }}>
+                                Kemahiran Elektrik
+                            </option>
+                            <option value="Kemahiran Mekatronik" {{ old('program', $student->program) == 'Kemahiran Mekatronik' ? 'selected' : '' }}>
+                                Kemahiran Mekatronik
+                            </option>
+                        </select>
+                    </div>
 
-                        <div class="form-group">
-                            <label for="program">Program</label>
-                            <select name="program" class="form-control" required>
-                                <option value="">-- Select Program --</option>
-                                <option value="Kemahiran Elektrik"
-                                    {{ old('program', $student->program) == 'Kemahiran Elektrik' ? 'selected' : '' }}>KEMAHIRAN ELEKTRIK
-                                </option>
-                                <option value="Kemahiran Mekatronik"
-                                    {{ old('program', $student->program) == 'Kemahiran Mekatronik' ? 'selected' : '' }}>KEMAHIRAN MEKATRONIK
-                                </option>
-
-                            </select>
-                        </div>
-
-                        <button class="btn btn-warning" type="submit">Update Student</button>
-                    </form>
-                </div>
+                    {{-- Submit Button --}}
+                    <div class="text-right">
+                        <button class="btn btn-warning px-4" type="submit">
+                            <i class="fas fa-save"></i> Update Student
+                        </button>
+                    </div>
+                </form>
             </div>
         </div>
-    </section>
+    </div>
+</section>
 @endsection

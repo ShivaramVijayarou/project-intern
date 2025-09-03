@@ -36,11 +36,16 @@ public function store(Request $request)
     {
         $request->validate([
             'title' => 'required|string|max:255',
-            'file' => 'required|mimes:pdf,doc,docx,ppt,pptx,txt|max:2048',
+            'description' => 'required|string',
+           'file' => 'required|file|mimes:pdf,doc,docx,ppt,pptx,xls,xlsx|max:20480',
             'program' => 'required|string',
         ]);
 
-        $filePath = $request->file('file')->store('notes', 'public');
+        // $filePath = $request->file('file')->store('notes', 'public');
+
+        // Store file with original name
+            $file = $request->file('file');
+            $filePath = $file->storeAs('notes', $file->getClientOriginalName(),'public');
 
         Note::create([
             'title' => $request->title,
@@ -53,6 +58,32 @@ public function store(Request $request)
         return redirect()->route('admin.notes.index')->with('success', 'Note uploaded successfully!');
     }
 
+// public function store(Request $request)
+// {
+//     $request->validate([
+//         'title' => 'required|string|max:255',
+//         'description' => 'required|string',
+//         'file' => 'required|mimes:pdf,doc,docx,ppt,pptx,xls,xlsx|max:20480',
+//         'program' => 'required|string',
+//     ]);
+
+//     $note = new Note();
+//     $note->title = $request->title;
+//     $note->description = $request->description;
+//     $note->program = $request->program;
+//     $note->uploaded_by = $request->uploaded_by;
+
+//     if ($request->hasFile('file')) {
+//         $originalName = $request->file('file')->getClientOriginalName();
+//         $filePath = $request->file('file')->storeAs('notes', $originalName, 'public');
+//         $note->file = $filePath;
+//     }
+
+//     $note->save();
+
+//     return redirect()->route('admin.notes.index')->with('success', 'Note uploaded successfully!');
+// }
+
 
 public function update(Request $request, $id)
     {
@@ -63,7 +94,7 @@ public function update(Request $request, $id)
             'title'       => 'required|string|max:255',
             'description' => 'nullable|string',
             'program'     => 'required|string',
-            'file'        => 'nullable|mimes:pdf,doc,docx,ppt,pptx,txt|max:2048',
+            'file'        => 'nullable|mimes:pdf,doc,docx,ppt,pptx,txt|max:5000',
         ]);
 
         // If new file uploaded, replace the old one

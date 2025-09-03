@@ -16,7 +16,7 @@ class ProfileController extends Controller
 {
     use FileUploadTrait;
 
-    
+
     function index(): View
     {
         return view('admin.profile.index');
@@ -54,6 +54,8 @@ class ProfileController extends Controller
         return redirect()->back();
     }
 
+
+    // password update
     function updatePassword(ProfilePasswordUpdateRequest $request): RedirectResponse
     {
 

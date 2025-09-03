@@ -18,26 +18,33 @@ class StudentDashboardController extends Controller
 public function index()
 {
     $student = Auth::user();
+    $studentProgram = $student->program;
 
-    $upcomingExams = Exam::where('program', $student->program)
-                         ->whereDate('exam_date', '>=', now())
-                         ->orderBy('exam_date')
-                         ->take(3)
-                         ->get();
+    // Notes
+    $notes = Note::where('program', $studentProgram)->latest()->get();
+    $notesCount = $notes->count();
+    $recentNotes = $notes->take(3);
 
-    $recentNotes = Note::where('program', $student->program)
-                       ->latest()
-                       ->take(3)
-                       ->get();
+    // Upcoming exams
+    $exams = Exam::where('program', $studentProgram)
+        ->whereDate('exam_date', '>=', now())
+        ->orderBy('exam_date', 'asc')
+        ->take(3)
+        ->get();
 
+    $upcomingExamsCount = $exams->count(); // ✅ count exams
 
+    return view('student.dashboard.index', compact(
+        'student',
+        'studentProgram',
+        'notes',
+        'notesCount',
+        'recentNotes',
+        'exams',
+        'upcomingExamsCount' // ✅ pass count to blade
+    ));
 
-    return view('student.dashboard.index', compact('student', 'upcomingExams', 'recentNotes',));
 }
-
-
-
-
 }
 
 // student.layouts.master

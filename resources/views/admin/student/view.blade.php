@@ -52,8 +52,9 @@
                             @foreach ($students as $student)
                                 <tr>
                                     <td>
-                                        <img src="{{ asset($student->profileimage) }}" class="img-thumbnail"
-                                            style="width: 80px; height: 80px; object-fit: cover;">
+                                      <img src="{{ $student->profileimage ? asset('storage/' . $student->profileimage) : asset('uploads/profile.png') }}"
+                                            alt="Profile Image"
+                                            class="w-32 h-32 rounded-full object-cover border-4 border-gray-200 shadow" style="width: 80px; height: 80px; object-fit: cover;">
                                     </td>
 
                                     <td>{{ $student->name }}</td>
