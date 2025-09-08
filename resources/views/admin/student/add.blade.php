@@ -13,7 +13,7 @@
 
                         {{-- Student Photo --}}
                         <div class="form-group">
-                           
+
 
                             <div id="image-preview" class="image-preview text-center">
                                 <img id="preview-img" src="{{ asset('uploads/profile.png') }}" alt="Preview"
@@ -101,6 +101,8 @@
                             <label for="program">Program</label>
                             <select name="program" class="form-control" required>
                                 <option value="">-- Select Program --</option>
+                                 <option value="Kemahiran-Elektrik">-- Kemahiran Elektrik --</option>
+                                  <option value="Kemahiran-Elektrik">-- Kemahiran Mekatronik --</option>
                                 @foreach ($programs as $program)
                                     <option value="{{ $program }}"
                                         {{ old('program') == $program ? 'selected' : '' }}>
