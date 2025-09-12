@@ -6,6 +6,7 @@
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, shrink-to-fit=no" name="viewport">
     <title>Admin Dashboard &mdash; KOLEJ MAJU</title>
 
+
     <!-- General CSS Files -->
     <link rel="stylesheet" href="{{ asset('admin/assets/modules/bootstrap/css/bootstrap.min.css') }}">
     <link rel="stylesheet" href="{{ asset('admin/assets/modules/fontawesome/css/all.min.css') }}">
@@ -15,20 +16,7 @@
     <link rel="stylesheet" href="{{ asset('admin/assets/css/style.css') }}">
     <link rel="stylesheet" href="{{ asset('admin/assets/css/components.css') }}">
 
-    <!-- Start GA -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-94034622-3"></script>
-    <script>
-        window.dataLayer = window.dataLayer || [];
 
-        function gtag() {
-            dataLayer.push(arguments);
-        }
-        gtag('js', new Date());
-
-        gtag('config', 'UA-94034622-3');
-    </script>
-
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <!-- /END GA -->
 </head>
 
@@ -38,12 +26,17 @@
             <div class="navbar-bg"></div>
 
 
+
             @include('admin.layouts.sidebar')
+
+
 
             <!-- Main Content -->
             <div class="main-content">
                 @yield('content')
             </div>
+
+
             <footer class="main-footer">
                 <div class="footer-left">
                     Copyright &copy; 2025 <div class="bullet"></div> Design By <a>KOLEJ TEKNOLOGI MAJU</a>
@@ -69,9 +62,6 @@
 
 
 
-
-
-
     <script>
         toastr.options.progressBar = true;
         @if ($errors->any())
@@ -94,19 +84,39 @@
         });
     </script>
 
-@push('scripts')
-<script>
-    document.getElementById('image-upload').addEventListener('change', function (e) {
-        const file = e.target.files[0];
-        const preview = document.getElementById('preview-img');
-        if (file) {
-            preview.src = URL.createObjectURL(file);
-            preview.classList.remove('d-none'); // show image when selected
-        }
-    });
-</script>
-@endpush
+
+    <script>
+        document.getElementById('image-upload').addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            const preview = document.getElementById('preview-img');
+            if (file) {
+                preview.src = URL.createObjectURL(file);
+                preview.classList.remove('d-none'); // show image when selected
+            }
+        });
+    </script>
+
     @stack('scripts')
+
+    <!-- Start GA -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-94034622-3"></script>
+
+    <script>
+        window.dataLayer = window.dataLayer || [];
+
+        function gtag() {
+            dataLayer.push(arguments);
+        }
+        gtag('js', new Date());
+
+        gtag('config', 'UA-94034622-3');
+    </script>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+
+
+
 
 
 </body>
