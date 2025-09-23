@@ -29,6 +29,7 @@ class User extends Authenticatable
         'address',
         'ic',
         'program',
+        'level',
         'status',
     ];
 

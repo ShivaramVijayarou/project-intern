@@ -19,9 +19,18 @@
                             type="text"
                             name="search"
                             class="form-control"
-                            placeholder="Search student ID"
+                            placeholder="Search by name or student ID"
                             value="{{ request('search') }}"
                         >
+<select name="program" class="form-control">
+            <option value="">All Programs</option>
+            @foreach($programs as $prog)
+                <option value="{{ $prog }}" {{ request('program') == $prog ? 'selected' : '' }}>
+                    {{ $prog }}
+                </option>
+            @endforeach
+        </select>
+
                         <div class="input-group-append">
                             <button class="btn btn-primary" type="submit">Search</button>
                         </div>
@@ -44,6 +53,7 @@
                                 <th>Phone</th>
                                 <th>Address</th>
                                 <th>Program</th>
+                                <th>Level</th>
                                 <th>IC No</th>
                                 <th>Status</th>
                                 <th>Actions</th>
@@ -64,11 +74,12 @@
                                         >
                                     </td>
                                     <td>{{ $student->student_id }}</td>
-                                    <td>{{ $student->name }}</td>
+                                    <td>{{ ucwords(strtolower($student->name)) }}</td>
                                     <td>{{ $student->email }}</td>
                                     <td>{{ $student->phoneNo }}</td>
                                     <td>{{ $student->address }}</td>
                                     <td>{{ $student->program }}</td>
+                                    <td>{{ $student->level }}</td>
                                     <td>{{ $student->ic }}</td>
                                     <td>
                                         @if ($student->status === 'active')

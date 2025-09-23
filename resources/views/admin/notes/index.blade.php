@@ -11,22 +11,36 @@
             </a>
         </div>
 
-        {{-- Search Bar --}}
         <div class="row mb-3">
             <div class="col-12 d-flex justify-content-end">
                 <form action="{{ route('admin.notes.index') }}" method="GET" class="form-inline">
-                    <div class="input-group">
+                    <div class="input-group mr-2">
                         <input type="text" name="search" class="form-control"
                             placeholder="Search notes by title or program" value="{{ request('search') }}">
-                        <div class="input-group-append">
-                            <button class="btn btn-primary" type="submit">
-                                <i class="fas fa-search"></i> Search
-                            </button>
-                        </div>
+                    </div>
+
+                    <div class="input-group mr-2">
+                        <select name="level" class="form-control">
+                            <option value="">All Levels</option>
+                            <option value="level 1" {{ request('level') == 'level 1' ? 'selected' : '' }}>Level 1</option>
+                            <option value="level 2" {{ request('level') == 'level 2' ? 'selected' : '' }}>Level 2</option>
+                            <option value="level 3" {{ request('level') == 'level 3' ? 'selected' : '' }}>Level 3</option>
+                            {{-- Or dynamically load levels from DB --}}
+                            {{-- @foreach ($levels as $level)
+                        <option value="{{ $level }}" {{ request('level') == $level ? 'selected' : '' }}>{{ $level }}</option>
+                    @endforeach --}}
+                        </select>
+                    </div>
+
+                    <div class="input-group-append">
+                        <button class="btn btn-primary" type="submit">
+                            <i class="fas fa-search"></i> Search
+                        </button>
                     </div>
                 </form>
             </div>
         </div>
+
 
         {{-- Notes Table --}}
         <div class="card">
@@ -45,6 +59,7 @@
                                     <th>Program</th>
                                     <th>Uploaded By</th>
                                     <th>File</th>
+                                    <th>Level</th>
                                     <th>Uploaded At</th>
                                     <th width="120">Actions</th>
                                 </tr>
@@ -55,8 +70,8 @@
                                         <td>{{ $note->title }}</td>
                                         <td>{{ \Illuminate\Support\Str::limit($note->description, 50) }}</td>
                                         <td>{{ $note->program }}</td>
+
                                         <td>{{ $note->uploader->name ?? 'Unknown' }}</td>
-                                       
                                         <td>
                                             @php
                                                 $filePath = asset('storage/' . $note->file);
@@ -75,6 +90,7 @@
                                             </a>
 
                                         </td>
+                                        <td>{{ $note->level }}</td>
                                         <td>{{ $note->created_at->format('d M, Y') }}</td>
                                         <td>
                                             <a href="{{ route('admin.notes.edit', $note->id) }}"

@@ -58,6 +58,30 @@
                         @enderror
                     </div>
 
+
+                    {{-- Level --}}
+                    <div class="form-group">
+                        <label for="level">Level</label>
+                        <select name="level" class="form-control @error('level') is-invalid @enderror" required>
+                            <option value="">-- Select Level --</option>
+                            <option value="Level 1"
+                                {{ old('level 1', $note->level) == 'Level 1' ? 'selected' : '' }}>
+                               Level 1
+                            </option>
+                            <option value="Level 2"
+                                {{ old('level 2', $note->level) == 'Level 2' ? 'selected' : '' }}>
+                                Level 2
+                            </option>
+                            <option value="Level 3"
+                                {{ old('level 3', $note->level) == 'Level 3' ? 'selected' : '' }}>
+                                Level 3
+                            </option>
+                        </select>
+                        @error('level')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
+                    </div>
+
                     {{-- File --}}
                     <div class="form-group">
                         <label for="file">Upload New File (optional)</label>

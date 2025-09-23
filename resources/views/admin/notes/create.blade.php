@@ -54,6 +54,27 @@
                             </select>
                         </div>
 
+
+                        {{-- Level --}}
+                        <div class="form-group">
+                            <label for="level">Level</label>
+                            <select id="level" name="level" class="form-control" required>
+                                <option value="">-- Select Level --</option>
+                                <option value="Level 1"
+                                    {{ old('level 1') == 'Level 1' ? 'selected' : '' }}>
+                                    Level 1
+                                </option>
+                                <option value="Level 2"
+                                    {{ old('level 2') == 'Level 2' ? 'selected' : '' }}>
+                                    Level 2
+                                </option>
+                                <option value="Level 3"
+                                    {{ old('level 3') == 'Level 3' ? 'selected' : '' }}>
+                                    Level 3
+                                </option>
+                            </select>
+                        </div>
+
                         {{-- Uploaded By (Hidden) --}}
                         <input type="hidden" name="uploaded_by" value="{{ auth()->id() }}">
 

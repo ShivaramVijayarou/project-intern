@@ -16,7 +16,7 @@
         }
 
         body {
-            background: url('{{ asset('uploads/klj_maju.jpg') }}') no-repeat center center fixed;
+            background: url("{{ asset('uploads/klj_maju.jpg') }}") no-repeat center center fixed;
             background-size: cover;
             display: flex;
             justify-content: center;

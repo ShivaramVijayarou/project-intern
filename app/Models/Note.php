@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class Note extends Model
 {
     //
-    protected $fillable = ['title', 'description', 'file', 'program', 'uploaded_by'];
+    protected $fillable = ['title', 'description', 'file', 'program', 'level', 'uploaded_by'];
 
 
 

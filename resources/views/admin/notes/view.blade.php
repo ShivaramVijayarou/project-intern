@@ -41,6 +41,7 @@
                                 <th>Program</th>
                                 <th>Uploaded By</th>
                                 <th>File</th>
+                                <th>Level</th>
                                 <th>Uploaded At</th>
                                 <th>Action</th>
                             </tr>
@@ -58,6 +59,7 @@
                                            <i class="fas fa-download"></i> View
                                         </a>
                                     </td>
+                                   <td>{{ $note->level }}</td>
                                     <td>{{ $note->created_at->format('d M, Y') }}</td>
                                     <td>
                                         <a href="{{ route('admin.notes.edit', $note->id) }}"

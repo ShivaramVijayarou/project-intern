@@ -11,16 +11,33 @@ use Illuminate\Support\Facades\Storage;
 
 class NoteController extends Controller
 {
-    //
 
-    //  function index(): View
+    // public function index()
     // {
-    //     return view('admin.notes.index');
+    //     $notes = Note::latest()->paginate(10); // use paginate if your Blade calls ->links()
+    //     return view('admin.notes.index', compact('notes'));
     // }
 
-    public function index()
+    public function index(Request $request)
     {
-        $notes = Note::latest()->paginate(10); // use paginate if your Blade calls ->links()
+        $query = Note::query()->with('uploader');
+
+        // Filter by search term (title or program)
+        if ($request->filled('search')) {
+            $search = $request->input('search');
+            $query->where(function ($q) use ($search) {
+                $q->where('title', 'like', "%{$search}%")
+                    ->orWhere('program', 'like', "%{$search}%");
+            });
+        }
+
+        // Filter by level
+        if ($request->filled('level')) {
+            $query->where('level', $request->input('level'));
+        }
+
+        $notes = $query->latest()->paginate(10);
+
         return view('admin.notes.index', compact('notes'));
     }
 
@@ -32,60 +49,36 @@ class NoteController extends Controller
 
 
 
-public function store(Request $request)
+    public function store(Request $request)
     {
         $request->validate([
             'title' => 'required|string|max:255',
             'description' => 'required|string',
-           'file' => 'required|file|mimes:pdf,doc,docx,ppt,pptx,xls,xlsx|max:20480',
+            'file' => 'required|file|mimes:pdf,doc,docx,ppt,pptx,xls,xlsx|max:20480',
             'program' => 'required|string',
+            'level' => 'required|string',
         ]);
 
         // $filePath = $request->file('file')->store('notes', 'public');
 
         // Store file with original name
-            $file = $request->file('file');
-            $filePath = $file->storeAs('notes', $file->getClientOriginalName(),'public');
+        $file = $request->file('file');
+        $filePath = $file->storeAs('notes', $file->getClientOriginalName(), 'public');
 
         Note::create([
             'title' => $request->title,
             'description' => $request->description,
             'file' => $filePath,
-             'program' => $request->program,
+            'program' => $request->program,
+            'level' => $request->level,
             'uploaded_by' => Auth::id(),
         ]);
 
         return redirect()->route('admin.notes.index')->with('success', 'Note uploaded successfully!');
     }
 
-// public function store(Request $request)
-// {
-//     $request->validate([
-//         'title' => 'required|string|max:255',
-//         'description' => 'required|string',
-//         'file' => 'required|mimes:pdf,doc,docx,ppt,pptx,xls,xlsx|max:20480',
-//         'program' => 'required|string',
-//     ]);
 
-//     $note = new Note();
-//     $note->title = $request->title;
-//     $note->description = $request->description;
-//     $note->program = $request->program;
-//     $note->uploaded_by = $request->uploaded_by;
-
-//     if ($request->hasFile('file')) {
-//         $originalName = $request->file('file')->getClientOriginalName();
-//         $filePath = $request->file('file')->storeAs('notes', $originalName, 'public');
-//         $note->file = $filePath;
-//     }
-
-//     $note->save();
-
-//     return redirect()->route('admin.notes.index')->with('success', 'Note uploaded successfully!');
-// }
-
-
-public function update(Request $request, $id)
+    public function update(Request $request, $id)
     {
         $note = Note::findOrFail($id);
 
@@ -94,6 +87,7 @@ public function update(Request $request, $id)
             'title'       => 'required|string|max:255',
             'description' => 'nullable|string',
             'program'     => 'required|string',
+            'level'     => 'required|string',
             'file'        => 'nullable|mimes:pdf,doc,docx,ppt,pptx,txt|max:5000',
         ]);
 
@@ -101,8 +95,8 @@ public function update(Request $request, $id)
         if ($request->hasFile('file')) {
             // delete old file if exists
             if ($note->file && Storage::disk('public')->exists($note->file)) {
-    Storage::disk('public')->delete($note->file);
-}
+                Storage::disk('public')->delete($note->file);
+            }
 
             // store new file
             $validated['file'] = $request->file('file')->store('notes', 'public');
@@ -117,22 +111,22 @@ public function update(Request $request, $id)
         return redirect()->route('admin.notes.index')->with('success', 'Note updated successfully.');
     }
 
-public function edit($id)
-{
-    $note = Note::findOrFail($id);
-    return view('admin.notes.edit', compact('note'));
-}
+    public function edit($id)
+    {
+        $note = Note::findOrFail($id);
+        return view('admin.notes.edit', compact('note'));
+    }
 
 
 
 
     public function destroy(Note $note)
-{
-    if ($note->file && Storage::disk('public')->exists($note->file)) {
-        Storage::disk('public')->delete($note->file);
-    }
+    {
+        if ($note->file && Storage::disk('public')->exists($note->file)) {
+            Storage::disk('public')->delete($note->file);
+        }
 
-    $note->delete();
-    return redirect()->back()->with('success', 'Note deleted successfully!');
-}
+        $note->delete();
+        return redirect()->back()->with('success', 'Note deleted successfully!');
+    }
 }

@@ -12,27 +12,29 @@ class StudentController extends Controller
 {
 
 
-    //Show student list
-    // public function index()
-    // {
-    //     $students = User::where('role', 'user')->get();
-    //     return view('admin.student.index', compact('students'));
-    // }
-
-
     public function index(Request $request)
     {
         $search = $request->input('search');
+        $program = $request->input('program');
 
         $students = User::query()
             ->when($search, function ($query, $search) {
-                $query->where('name', 'like', "%{$search}%")
-                    ->orWhere('student_id', 'like', "%{$search}%");
+               $query->where(function ($q) use ($search) {
+                $q->where('name', 'like', "%{$search}%")
+                  ->orWhere('student_id', 'like', "%{$search}%");
+                      });
             })
+            ->when($program, function ($query, $program) {
+            $query->where('program', $program);
+                })
             ->where('role', 'user') // only show students
+            ->orderBy('name', 'asc') // <-- sort alphabetically by name
             ->paginate(10); // optional pagination
 
-        return view('admin.student.index', compact('students'));
+
+$programs = User::where('role','user')->distinct()->pluck('program');
+
+        return view('admin.student.index', compact('students', 'programs'));
     }
 
 
@@ -61,10 +63,11 @@ class StudentController extends Controller
         'student_id'   => 'required|unique:users,student_id',
         'name'         => 'required|string|max:255',
         'email'        => 'required|email|unique:users,email',
-        'ic'           => 'required|string|max:20|unique:users,ic',
+        'ic'           => 'required|string|max:20|unique:users,ic|regex:/^\d{6}-\d{2}-\d{4}$/',
         'program'      => 'required|string|max:100',
         'phoneNo'      => 'nullable|string|max:20',
         'address'      => 'nullable|string|max:255',
+        'level'      => 'nullable|string|max:255',
         'profileimage' => 'nullable|image|mimes:jpg,jpeg,png|max:3000',
         'status'       => 'required|in:active,inactive',
     ]);
@@ -84,6 +87,7 @@ class StudentController extends Controller
         'address'      => $request->address,
         'ic'           => $request->ic,
         'program'      => $request->program,
+        'level'        => $request->level,
         'profileimage' => $photoPath ?? 'uploads/profile.png',
         'role'         => 'user',
         'status'       => $request->status,
@@ -107,6 +111,7 @@ public function show($id)
 {
     $student = User::findOrFail($id); // fetch student by ID
     return view('admin.student.view', compact('student'));
+
 }
 
 
@@ -123,12 +128,13 @@ public function show($id)
     {
         $student = User::findOrFail($id);
 
-        $request->validate([
+        $validated =$request->validate([
             'student_id' => 'required|unique:users,student_id,' . $student->id,
             'name'       => 'required|string|max:255',
             'email'      => 'required|email|unique:users,email,' . $student->id,
-            'ic'         => 'required|string|max:20|unique:users,ic,' . $student->id,
+           'ic'          => 'required|string|regex:/^\d{6}-\d{2}-\d{4}$/|unique:users,ic,' . $student->id,
             'program'    => 'required|in:Kemahiran Elektrik,Kemahiran Mekatronik',
+            'level'     => 'required|string',
             'phoneNo'    => 'nullable|string|max:20',
             'address'    => 'nullable|string|max:255',
             'status'     => 'required|in:active,inactive',
@@ -148,8 +154,9 @@ public function show($id)
             'email'      => $request->email,
             'phoneNo'    => $request->phoneNo,
             'address'    => $request->address,
-            'ic'         => $request->ic,
+            $student->ic = $validated['ic'],
             'program'    => $request->program,
+            'level'    => $request->level,
             'status'     => $request->status,
             'profileimage' => $student->profileimage, // keep updated photo
         ]);

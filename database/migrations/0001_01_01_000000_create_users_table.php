@@ -21,6 +21,7 @@ return new class extends Migration
             $table->string('address')->nullable();
             $table->string('ic')->unique()->nullable();
             $table->string('program')->nullable();
+             $table->string('level')->nullable();
             $table->string('status')->default('active');
             $table->rememberToken();
             $table->timestamps();
