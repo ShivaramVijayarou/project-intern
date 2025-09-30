@@ -6,13 +6,23 @@ use App\Http\Controllers\Admin\ExamController;
 use App\Http\Controllers\Admin\NoteController;
 use App\Http\Controllers\Admin\ProfileController;
 use App\Http\Controllers\Admin\StudentController;
+use App\Http\Controllers\Admin\ElibraryController;
+use App\Http\Controllers\Admin\KaunselingController;
+use App\Http\Controllers\Admin\InfoController;
+use App\Http\Controllers\Admin\ResultController;
 use App\Http\Controllers\Staff\StaffDashboardController;
 use App\Http\Controllers\Student\StudentDashboardController;
 use App\Http\Controllers\Student\StudentProfileController;
 use App\Http\Controllers\Student\StudentExamController;
 use App\Http\Controllers\Student\StudentNotesController;
+use App\Http\Controllers\Student\StudentELibraryController;
+use App\Http\Controllers\Student\StudentKaunselingController;
+use App\Http\Controllers\Student\StudentInfoController;
+use App\Http\Controllers\Student\StudentResultController;
 use App\Http\Controllers\Auth\PasswordResetLinkController;
 use App\Http\Controllers\Auth\NewPasswordController;
+
+
 /*
 |--------------------------------------------------------------------------
 | Default Redirect
@@ -28,10 +38,6 @@ Route::get('/', function () {
 | Dashboard (for all authenticated users)
 |--------------------------------------------------------------------------
 */
-// Route::get('/dashboard', function () {
-//     return view('student.dashboard.index');
-// })->middleware(['auth', 'verified'])->name('dashboard');
-
 Route::get('/dashboard', [StudentDashboardController::class, 'index'])
     ->middleware(['auth', 'verified', 'role:user'])
     ->name('dashboard');
@@ -64,7 +70,7 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::delete('/students/{id}', [StudentController::class, 'destroy'])->name('students.destroy');
     Route::get('/admin/students/{id}/edit', [StudentController::class, 'edit'])->name('admin.students.edit');
     Route::put('/admin/students/{id}', [StudentController::class, 'update'])->name('admin.students.update');
-    
+
 
 
     // Admin profile
@@ -72,12 +78,38 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::put('admin/profile', [ProfileController::class, 'updateProfile'])->name('admin.profile.update');
     Route::put('admin/profile/password', [ProfileController::class, 'updatePassword'])->name('admin.profile.password.update');
 
+
+Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->group(function () {
+    Route::get('dashboard', [AdminDashboardController::class, 'index'])->name('dashboard');
+    Route::resource('students', StudentController::class);
+    Route::resource('notes', NoteController::class);
+    Route::resource('exams', ExamController::class);
+    Route::resource('elibrary', ElibraryController::class);
+    Route::resource('kaunseling', KaunselingController::class);
+    Route::resource('info', InfoController::class);
+     Route::resource('result', ResultController::class);
+
+
+});
+
+
+
+
+
     // Notes & Students Resource Controllers
     Route::prefix('admin')->name('admin.')->group(function () {
         Route::resource('students', StudentController::class);
         Route::resource('notes', NoteController::class);
         Route::resource('exams', ExamController::class);
+        Route::resource('Elibrary', ElibraryController::class);
+         Route::resource('kaunseling', KaunselingController::class);
+         Route::resource('info', InfoController::class);
+         Route::resource('result', ResultController::class);
     });
+
+
+
+
 });
 
 /*
@@ -101,6 +133,14 @@ Route::middleware(['auth', 'role:user'])->group(function () {
     Route::put('/student/profile/password', [StudentProfileController::class, 'updatePassword'])->name('student.profile.password.update');
     Route::get('student/notes', [StudentNotesController::class, 'index'])->name('student.notes');
    Route::get('/student/exams', [StudentExamController::class, 'index'])->name('student.exams');
+   Route::get('/student/elibrary', [StudentELibraryController::class, 'index'])->name('student.elibrary');
+   Route::get('/student/kaunseling', [StudentKaunselingController::class, 'index'])->name('student.kaunseling');
+    Route::get('/student/info', [StudentInfoController::class, 'index'])->name('student.info');
+    Route::get('/student/result', [StudentResultController::class, 'index'])->name('student.result');
+
+
+
+
 
 
 });

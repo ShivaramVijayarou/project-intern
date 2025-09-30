@@ -55,28 +55,31 @@
         </div>
 
         <!-- Examination Schedule -->
-        <div class="card bg-white rounded-xl shadow-md p-6">
-            <div class="flex justify-between items-center mb-4">
-                <h3 class="text-lg font-semibold">Examination Schedule</h3>
-                <a href="{{ route('student.exams') }}" class="text-blue-600 text-sm">View All</a>
-            </div>
+<div class="card bg-white rounded-xl shadow-md p-6">
+    <div class="flex justify-between items-center mb-4">
+        <h3 class="text-lg font-semibold">Examination Schedule</h3>
+        <a href="{{ route('student.exams') }}" class="text-blue-600 text-sm">View All</a>
+    </div>
 
-            <div class="space-y-4">
-                @forelse($exams ?? [] as $exam)
-                    <div class="deadline-item p-3 rounded-lg bg-gray-50">
-                        <td class="px-6 py-4">
-                {{ \Carbon\Carbon::parse($exam->exam_date)->format('d M Y') }}
-            </td>--
-            <td class="px-6 py-4">
-                {{ \Carbon\Carbon::parse($exam->time_from)->format('h:i A') }}
-
-            </td>
-                    </div>
-                @empty
-                    <p class="text-gray-500">No upcoming exams scheduled.</p>
-                @endforelse
+    <div class="space-y-4">
+        @forelse($exams ?? [] as $exam)
+            <div class="deadline-item p-3 rounded-lg bg-gray-50">
+                <td class="px-6 py-4 text-blue-700">
+                    {{ \Carbon\Carbon::parse($exam->exam_date)->format('d M Y') }}
+                </td>---
+                <td class="px-6 py-4 text-green-700">
+                    {{ $exam->course_name }}
+                </td>---
+                <td class="px-6 py-4 text-red-700">
+                    {{ \Carbon\Carbon::parse($exam->time_from)->format('h:i A') }}
+                </td>
             </div>
-        </div>
+        @empty
+            <p class="text-gray-500">No upcoming exams scheduled.</p>
+        @endforelse
+    </div>
+</div>
+
 
     </div>
 </main>

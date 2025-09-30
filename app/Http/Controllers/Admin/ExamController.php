@@ -10,18 +10,6 @@ use Illuminate\Contracts\View\View;
 class ExamController extends Controller
 {
     //
-
-    // function index(): View
-    // {
-    //      return view('admin.examination.index');
-    // }
-
-    // public function index()
-    // {
-    //     $exams = Exam::latest()->paginate(10); // use paginate if your Blade calls ->links()
-    //     return view('admin.examination.index', compact('exams'));
-    // }
-
     public function index(Request $request)
 {
     $query = Exam::query();

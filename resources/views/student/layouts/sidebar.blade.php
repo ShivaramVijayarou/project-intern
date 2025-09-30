@@ -40,6 +40,59 @@
             <i class="fas fa-tasks w-5 h-5 mr-3"></i> Examination Schedule
         </a>
 
+        {{-- <a href="{{ route('student.elibrary') }}"
+           class="flex items-center w-full p-3 rounded-lg transition
+           {{ request()->routeIs('student.elibrary') ? 'bg-blue-100 text-blue-600' : 'hover:bg-gray-200 text-gray-700' }}">
+            <i class="fas fa-book-open w-5 h-5 mr-3"></i>E-Library
+        </a>
+
+<a href="{{ route('student.kaunseling') }}"
+       class="flex items-center w-full p-3 rounded-lg transition
+       {{ request()->routeIs('student.kaunseling') ? 'bg-blue-100 text-blue-600' : 'hover:bg-gray-200 text-gray-700' }}">
+        <i class="fas fa-comments w-5 h-5 mr-3"></i> Kaunseling
+    </a> --}}
+
+
+    {{-- ✅ Services Dropdown for Student (Tailwind version) --}}
+<div x-data="{ open: false }" class="space-y-1">
+    <!-- Button -->
+    <button @click="open = !open"
+        class="flex items-center w-full p-3 rounded-lg transition
+               hover:bg-gray-200 text-gray-700 focus:outline-none">
+        <i class="fas fa-wrench w-5 h-5 mr-3"></i>
+        <span class="flex-1 text-left">Services</span>
+        <i :class="open ? 'fas fa-chevron-up' : 'fas fa-chevron-down'" class="w-4 ml-auto"></i>
+    </button>
+
+    <!-- Dropdown items -->
+    <div x-show="open" x-collapse class="pl-8 space-y-1">
+        <a href="{{ route('student.elibrary') }}"
+           class="flex items-center w-full p-2 rounded-lg transition
+           {{ request()->routeIs('student.elibrary') ? 'bg-blue-100 text-blue-600' : 'hover:bg-gray-200 text-gray-700' }}">
+            <i class="fas fa-book-open w-5 h-5 mr-3"></i>E-Library
+        </a>
+
+        <a href="{{ route('student.kaunseling') }}"
+           class="flex items-center w-full p-2 rounded-lg transition
+           {{ request()->routeIs('student.kaunseling') ? 'bg-blue-100 text-blue-600' : 'hover:bg-gray-200 text-gray-700' }}">
+            <i class="fas fa-user-friends w-5 h-5 mr-3"></i>Kaunseling
+        </a>
+
+         <a href="{{ route('student.info') }}"
+           class="flex items-center w-full p-2 rounded-lg transition
+           {{ request()->routeIs('student.info') ? 'bg-blue-100 text-blue-600' : 'hover:bg-gray-200 text-gray-700' }}">
+            <i class="fa-solid fa-book w-5 h-5 mr-3"></i>Info KTM
+        </a>
+    </div>
+</div>
+
+        <a href="{{ route('student.result') }}"
+           class="flex items-center w-full p-3 rounded-lg transition
+           {{ request()->routeIs('student.result') ? 'bg-blue-100 text-blue-600' : 'hover:bg-gray-200 text-gray-700' }}">
+            <i class="fas fa-pencil-ruler w-5 h-5 mr-3"></i> Exam Result
+        </a>
+
+
         <a href="{{ route('student.profile') }}"
            class="flex items-center w-full p-3 rounded-lg transition
            {{ request()->routeIs('student.profile') ? 'bg-blue-100 text-blue-600' : 'hover:bg-gray-200 text-gray-700' }}">
@@ -60,4 +113,3 @@
         </form>
     </div>
 </aside>
-  

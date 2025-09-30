@@ -83,6 +83,38 @@
                 </a>
             </li>
 
+             {{-- <li class="{{ request()->routeIs('admin.elibrary.*') ? 'active' : '' }}">
+                <a class="nav-link" href="{{ route('admin.elibrary.index') }}">
+                <i class="fas fa-book-open"></i> <span>E-Library</span>
+                </a>
+            </li> --}}
+
+
+             {{-- ✅ New Services Dropdown --}}
+    <li class="nav-item dropdown {{ request()->routeIs('admin.elibrary.*') || request()->routeIs('admin.kaunseling.*') ? 'active' : '' }}">
+        <a href="#" class="nav-link has-dropdown" data-toggle="dropdown">
+            <i class="fas fa-wrench"></i> <span>Services</span>
+        </a>
+        <ul class="dropdown-menu">
+            <li class="{{ request()->routeIs('admin.elibrary.*') ? 'active' : '' }}">
+                <a class="nav-link" href="{{ route('admin.elibrary.index') }}">
+                    <i class="fas fa-book-open"></i> <span>E-Library</span>
+                </a>
+            </li>
+            <li class="{{ request()->routeIs('admin.kaunseling.*') ? 'active' : '' }}">
+                <a class="nav-link" href="{{ route('admin.kaunseling.index') }}">
+                    <i class="fas fa-user-friends"></i> <span>Kaunseling</span>
+                </a>
+            </li>
+
+             <li class="{{ request()->routeIs('admin.info.*') ? 'active' : '' }}">
+                <a class="nav-link" href="{{ route('admin.info.index') }}">
+                    <i class="fa-solid fa-book"></i><span>Info KTM</span>
+                </a>
+            </li>
+        </ul>
+    </li>
+
             {{-- Example extra menu item --}}
             {{--
             <li class="{{ request()->is('admin/credits') ? 'active' : '' }}">
@@ -91,7 +123,15 @@
                 </a>
             </li>
             --}}
+            <li class="{{ request()->routeIs('admin.results.*') ? 'active' : '' }}">
+                <a class="nav-link" href="{{ route('admin.result.index') }}">
+                    <i class="fas fa-pencil-ruler"></i><span>Result</span>
+                </a>
+            </li>
+
         </ul>
+
+
 
         <!-- Sidebar Footer (optional) -->
         {{--

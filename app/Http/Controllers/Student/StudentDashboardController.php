@@ -19,9 +19,10 @@ public function index()
 {
     $student = Auth::user();
     $studentProgram = $student->program;
+    $studentLevel   = $student->level; 
 
     // Notes
-    $notes = Note::where('program', $studentProgram)->latest()->get();
+    $notes = Note::where('program', $studentProgram) ->where('level', $studentLevel)->latest()->get();
     $notesCount = $notes->count();
     $recentNotes = $notes->take(3);
 
