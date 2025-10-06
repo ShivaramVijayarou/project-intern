@@ -129,6 +129,12 @@
                 </a>
             </li>
 
+            <li class="{{ request()->routeIs('admin.attendances.*') ? 'active' : '' }}">
+                <a class="nav-link" href="{{ route('admin.attendance.index') }}">
+                    <i class="fas fa-user"></i><span>Attendance</span>
+                </a>
+            </li>
+
         </ul>
 
 

@@ -10,6 +10,7 @@ use App\Http\Controllers\Admin\ElibraryController;
 use App\Http\Controllers\Admin\KaunselingController;
 use App\Http\Controllers\Admin\InfoController;
 use App\Http\Controllers\Admin\ResultController;
+use App\Http\Controllers\Admin\AttendanceController;
 use App\Http\Controllers\Staff\StaffDashboardController;
 use App\Http\Controllers\Student\StudentDashboardController;
 use App\Http\Controllers\Student\StudentProfileController;
@@ -87,7 +88,8 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
     Route::resource('elibrary', ElibraryController::class);
     Route::resource('kaunseling', KaunselingController::class);
     Route::resource('info', InfoController::class);
-     Route::resource('result', ResultController::class);
+    Route::resource('result', ResultController::class);
+    Route::resource('attendance', AttendanceController::class);
 
 
 });
@@ -105,6 +107,7 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
          Route::resource('kaunseling', KaunselingController::class);
          Route::resource('info', InfoController::class);
          Route::resource('result', ResultController::class);
+        Route::resource('attendance', AttendanceController::class);
     });
 
 
@@ -137,11 +140,6 @@ Route::middleware(['auth', 'role:user'])->group(function () {
    Route::get('/student/kaunseling', [StudentKaunselingController::class, 'index'])->name('student.kaunseling');
     Route::get('/student/info', [StudentInfoController::class, 'index'])->name('student.info');
     Route::get('/student/result', [StudentResultController::class, 'index'])->name('student.result');
-
-
-
-
-
 
 });
 

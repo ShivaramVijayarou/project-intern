@@ -13,7 +13,7 @@ class ResultController extends Controller
     //
     public function index(Request $request)
 {
-    $query = \App\Models\Result::query();
+    $query =Result::query();
 
     if ($search = $request->input('search')) {
         $query->where('program', 'like', "%{$search}%")
@@ -46,7 +46,7 @@ public function store(Request $request)
 
     $filePath = $request->file('file_path')->store('results', 'public');
 
-    \App\Models\Result::create([
+    Result::create([
         'program'   => $request->program,
         'level'     => $request->level,
         'file_name' => $request->file_name,
