@@ -25,6 +25,7 @@ class User extends Authenticatable
         'role',
         'photo',
         'student_id',
+        'batch_code',
         'phoneNo',
         'address',
         'ic',

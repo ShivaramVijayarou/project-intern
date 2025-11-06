@@ -71,6 +71,7 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::delete('/students/{id}', [StudentController::class, 'destroy'])->name('students.destroy');
     Route::get('/admin/students/{id}/edit', [StudentController::class, 'edit'])->name('admin.students.edit');
     Route::put('/admin/students/{id}', [StudentController::class, 'update'])->name('admin.students.update');
+    Route::get('/admin/students/pdf', [StudentController::class, 'exportPdf'])->name('admin.students.pdf');
 
 
 

@@ -36,6 +36,13 @@
                                 value="{{ old('student_id', $student->student_id) }}" required>
                         </div>
 
+                         {{-- Batch Code --}}
+                        <div class="form-group col-md-6">
+                            <label>Batch Code</label>
+                            <input type="text" class="form-control" name="batch_code"
+                                value="{{ old('batch_code', $student->batch_code) }}" required>
+                        </div>
+
                         {{-- Full Name --}}
                         <div class="form-group col-md-6">
                             <label>Full Name</label>

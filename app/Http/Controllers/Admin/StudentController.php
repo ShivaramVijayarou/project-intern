@@ -7,6 +7,8 @@ use Illuminate\Contracts\View\View;
 use Illuminate\Http\Request;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
+use Barryvdh\DomPDF\Facade\Pdf;
+
 
 class StudentController extends Controller
 {
@@ -16,33 +18,61 @@ class StudentController extends Controller
     {
         $search = $request->input('search');
         $program = $request->input('program');
+        $batchCode = $request->input('batch_code');
 
         $students = User::query()
             ->when($search, function ($query, $search) {
-               $query->where(function ($q) use ($search) {
-                $q->where('name', 'like', "%{$search}%")
-                  ->orWhere('student_id', 'like', "%{$search}%");
-                      });
+                $query->where(function ($q) use ($search) {
+                    $q->where('name', 'like', "%{$search}%")
+                        ->orWhere('ic', 'like', "%{$search}%");
+                });
             })
             ->when($program, function ($query, $program) {
-            $query->where('program', $program);
-                })
+                $query->where('program', $program);
+            })
+            ->when($batchCode, function ($query, $batchCode) {
+            $query->where('batch_code', 'like', "%{$batchCode}%");
+        })
+
+
             ->where('role', 'user') // only show students
             ->orderBy('name', 'asc') // <-- sort alphabetically by name
-            ->paginate(10); // optional pagination
+            ->paginate(30); // optional pagination
 
 
-$programs = User::where('role','user')->distinct()->pluck('program');
+        $programs = User::where('role', 'user')->distinct()->pluck('program');
 
         return view('admin.student.index', compact('students', 'programs'));
     }
 
 
-    // Show add student form
-    // public function create()
-    // {
-    //     return view('admin.student.add');
-    // }
+   public function exportPdf(Request $request)
+{
+    $search = $request->input('search');
+    $program = $request->input('program');
+    $batchCode = $request->input('batch_code');
+
+    $students = User::query()
+        ->when($search, function ($query, $search) {
+            $query->where(function ($q) use ($search) {
+                $q->where('name', 'like', "%{$search}%")
+                  ->orWhere('ic', 'like', "%{$search}%");
+            });
+        })
+        ->when($program, function ($query, $program) {
+            $query->where('program', $program);
+        })
+        ->when($batchCode, function ($query, $batchCode) {
+            $query->where('batch_code', 'like', "%{$batchCode}%");
+        })
+        ->where('role', 'user')
+        ->orderBy('name', 'asc')
+        ->get();
+
+    $pdf = Pdf::loadView('admin.student.pdf', compact('students'));
+
+    return $pdf->download('student_list.pdf');
+}
 
     public function create()
     {
@@ -58,45 +88,47 @@ $programs = User::where('role','user')->distinct()->pluck('program');
 
     //Store new Student
     public function store(Request $request)
-{
-    $request->validate([
-        'student_id'   => 'required|unique:users,student_id',
-        'name'         => 'required|string|max:255',
-        'email'        => 'required|email|unique:users,email',
-        'ic'           => 'required|string|max:20|unique:users,ic|regex:/^\d{6}-\d{2}-\d{4}$/',
-        'program'      => 'required|string|max:100',
-        'phoneNo'      => 'nullable|string|max:20',
-        'address'      => 'nullable|string|max:255',
-        'level'      => 'nullable|string|max:255',
-        'profileimage' => 'nullable|image|mimes:jpg,jpeg,png|max:3000',
-        'status'       => 'required|in:active,inactive',
-    ]);
+    {
+        $request->validate([
+            'student_id'   => 'required|unique:users,student_id',
+            'batch_code'   => 'nullable|string|max:100',
+            'name'         => 'required|string|max:255',
+            'email'        => 'required|email|unique:users,email',
+            'ic'           => 'required|string|max:20|unique:users,ic|regex:/^\d{6}-\d{2}-\d{4}$/',
+            'program'      => 'required|string|max:100',
+            'phoneNo'      => 'nullable|string|max:20',
+            'address'      => 'nullable|string|max:255',
+            'level'      => 'nullable|string|max:255',
+            'profileimage' => 'nullable|image|mimes:jpg,jpeg,png|max:3000',
+            'status'       => 'required|in:active,inactive',
+        ]);
 
-    $photoPath = null;
+        $photoPath = null;
 
-    if ($request->hasFile('profileimage')) {
-        // Store only relative path like "students/xxx.jpg"
-        $photoPath = $request->file('profileimage')->store('students', 'public');
+        if ($request->hasFile('profileimage')) {
+            // Store only relative path like "students/xxx.jpg"
+            $photoPath = $request->file('profileimage')->store('students', 'public');
+        }
+
+        User::create([
+            'student_id'   => $request->student_id,
+            'batch_code'   => $request->batch_code,
+            'name'         => $request->name,
+            'email'        => $request->email,
+            'phoneNo'      => $request->phoneNo,
+            'address'      => $request->address,
+            'ic'           => $request->ic,
+            'program'      => $request->program,
+            'level'        => $request->level,
+            'profileimage' => $photoPath ?? 'uploads/profile.png',
+            'role'         => 'user',
+            'status'       => $request->status,
+            'password'     => Hash::make('student123'), // default password
+        ]);
+
+        return redirect()->route('admin.students.index')
+            ->with('success', 'Student added successfully!');
     }
-
-    User::create([
-        'student_id'   => $request->student_id,
-        'name'         => $request->name,
-        'email'        => $request->email,
-        'phoneNo'      => $request->phoneNo,
-        'address'      => $request->address,
-        'ic'           => $request->ic,
-        'program'      => $request->program,
-        'level'        => $request->level,
-        'profileimage' => $photoPath ?? 'uploads/profile.png',
-        'role'         => 'user',
-        'status'       => $request->status,
-        'password'     => Hash::make('student123'), // default password
-    ]);
-
-    return redirect()->route('admin.students.index')
-        ->with('success', 'Student added successfully!');
-}
 
 
     // View student info
@@ -107,12 +139,11 @@ $programs = User::where('role','user')->distinct()->pluck('program');
     //     return view('admin.students.show', compact('student'));
     // }
 
-public function show($id)
-{
-    $student = User::findOrFail($id); // fetch student by ID
-    return view('admin.student.view', compact('student'));
-
-}
+    public function show($id)
+    {
+        $student = User::findOrFail($id); // fetch student by ID
+        return view('admin.student.view', compact('student'));
+    }
 
 
 
@@ -128,11 +159,12 @@ public function show($id)
     {
         $student = User::findOrFail($id);
 
-        $validated =$request->validate([
+        $validated = $request->validate([
             'student_id' => 'required|unique:users,student_id,' . $student->id,
+            'batch_code'   => 'nullable|string|max:100|regex:/^[A-Z0-9\-:()]+$/i',
             'name'       => 'required|string|max:255',
             'email'      => 'required|email|unique:users,email,' . $student->id,
-           'ic'          => 'required|string|regex:/^\d{6}-\d{2}-\d{4}$/|unique:users,ic,' . $student->id,
+            'ic'          => 'required|string|regex:/^\d{6}-\d{2}-\d{4}$/|unique:users,ic,' . $student->id,
             'program'    => 'required|in:Kemahiran Elektrik,Kemahiran Mekatronik',
             'level'     => 'required|string',
             'phoneNo'    => 'nullable|string|max:20',
@@ -150,6 +182,7 @@ public function show($id)
         // Update other fields
         $student->update([
             'student_id' => $request->student_id,
+            'batch_code' => $request->batch_code,
             'name'       => $request->name,
             'email'      => $request->email,
             'phoneNo'    => $request->phoneNo,
