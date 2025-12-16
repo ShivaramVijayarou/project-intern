@@ -25,10 +25,7 @@
                             <option value="level 1" {{ request('level') == 'level 1' ? 'selected' : '' }}>Level 1</option>
                             <option value="level 2" {{ request('level') == 'level 2' ? 'selected' : '' }}>Level 2</option>
                             <option value="level 3" {{ request('level') == 'level 3' ? 'selected' : '' }}>Level 3</option>
-                            {{-- Or dynamically load levels from DB --}}
-                            {{-- @foreach ($levels as $level)
-                            <option value="{{ $level }}" {{ request('level') == $level ? 'selected' : '' }}>{{ $level }}</option>
-                             @endforeach --}}
+
                         </select>
                     </div>
 

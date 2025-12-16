@@ -46,6 +46,17 @@
                             @enderror
                         </div>
 
+                        {{-- Batch Code --}}
+                        <div class="form-group">
+                            <label for="batch_code">Batch Code</label>
+                            <input type="text" class="form-control" name="batch_code" value="{{ old('batch_code') }}"
+                                placeholder="Enter batch code (e.g. BATCH-01)">
+                            @error('batch_code')
+                                <small class="text-danger">{{ $message }}</small>
+                            @enderror
+                        </div>
+
+
                         {{-- Email --}}
                         <div class="form-group">
                             <label>Email</label>
@@ -122,16 +133,13 @@
                             <label for="level">Level</label>
                             <select id="level" name="level" class="form-control" required>
                                 <option value="">-- Select Level --</option>
-                                <option value="Level 2"
-                                    {{ old('level 2') == 'Level 2' ? 'selected' : '' }}>
+                                <option value="Level 2" {{ old('level 2') == 'Level 2' ? 'selected' : '' }}>
                                     Level 2
                                 </option>
-                                <option value="Level 3"
-                                    {{ old('level 3') == 'Level 3' ? 'selected' : '' }}>
+                                <option value="Level 3" {{ old('level 3') == 'Level 3' ? 'selected' : '' }}>
                                     Level 3
                                 </option>
-                                <option value="Level 4"
-                                    {{ old('level 4') == 'Level 4' ? 'selected' : '' }}>
+                                <option value="Level 4" {{ old('level 4') == 'Level 4' ? 'selected' : '' }}>
                                     Level 4
                                 </option>
                             </select>

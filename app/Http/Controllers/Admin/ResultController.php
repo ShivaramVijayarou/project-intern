@@ -58,7 +58,16 @@ public function store(Request $request)
 
 
 
+/**
+     * Remove the specified resource from storage.
+     */
+    public function destroy(Result $result)
+    {
+        //
+         $result->delete();
+        return redirect()->back()->with('success', 'Results deleted successfully!');
 
+    }
 
 
 

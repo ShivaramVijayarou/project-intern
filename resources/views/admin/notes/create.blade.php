@@ -15,26 +15,24 @@
                         {{-- Note Title --}}
                         <div class="form-group">
                             <label for="title">Note Title</label>
-                            <input type="text" id="title" name="title"
-                                   class="form-control"
-                                   value="{{ old('title') }}"
-                                   required>
+                            <input type="text" id="title" name="title" class="form-control"
+                                value="{{ old('title') }}" required>
                         </div>
 
                         {{-- Description --}}
                         <div class="form-group">
                             <label for="description">Description</label>
-                            <textarea id="description" name="description"
-                                      class="form-control" rows="3" required>{{ old('description') }}</textarea>
+                            <textarea id="description" name="description" class="form-control" rows="3" required>{{ old('description') }}</textarea>
                         </div>
 
                         {{-- File Upload --}}
                         <div class="form-group">
                             <label for="file">Upload File</label>
-                            <input type="file" id="file" name="file"
-                                   class="form-control" required>
+                            <input type="file" id="file" name="file" class="form-control"
+                                accept=".pdf,.doc,.docx,.ppt,.pptx,.xls,.xlsx,.zip" required>
+
                             <small class="text-muted">
-                                Allowed formats: PDF, DOCX, PPTX, XLSX, etc.
+                                Allowed formats: PDF, DOCX, PPTX, XLSX, ZIP
                             </small>
                         </div>
 
@@ -60,16 +58,13 @@
                             <label for="level">Level</label>
                             <select id="level" name="level" class="form-control" required>
                                 <option value="">-- Select Level --</option>
-                                <option value="Level 1"
-                                    {{ old('level 1') == 'Level 1' ? 'selected' : '' }}>
+                                <option value="Level 1" {{ old('level 1') == 'Level 1' ? 'selected' : '' }}>
                                     Level 1
                                 </option>
-                                <option value="Level 2"
-                                    {{ old('level 2') == 'Level 2' ? 'selected' : '' }}>
+                                <option value="Level 2" {{ old('level 2') == 'Level 2' ? 'selected' : '' }}>
                                     Level 2
                                 </option>
-                                <option value="Level 3"
-                                    {{ old('level 3') == 'Level 3' ? 'selected' : '' }}>
+                                <option value="Level 3" {{ old('level 3') == 'Level 3' ? 'selected' : '' }}>
                                     Level 3
                                 </option>
                             </select>

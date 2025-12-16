@@ -59,7 +59,7 @@
                                         </a>
                                     </td>
                                     <td>
-                                        <form action="{{ route('admin.elibrary.destroy', $file->id) }}" method="POST" class="d-inline-block" onsubmit="return confirm('Are you sure?')">
+                                        <form action="{{ route('admin.result.destroy', $file->id) }}" method="POST" class="d-inline-block" onsubmit="return confirm('Are you sure?')">
                                             @csrf
                                             @method('DELETE')
                                             <button class="btn btn-danger btn-sm">

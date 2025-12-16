@@ -54,7 +54,7 @@ class NoteController extends Controller
         $request->validate([
             'title' => 'required|string|max:255',
             'description' => 'required|string',
-            'file' => 'required|file|mimes:pdf,doc,docx,ppt,pptx,xls,xlsx|max:20480',
+            'file' => 'required|mimes:pdf,doc,docx,ppt,pptx,xls,xlsx,zip|max:2097152',
             'program' => 'required|string',
             'level' => 'required|string',
         ]);
@@ -88,7 +88,7 @@ class NoteController extends Controller
             'description' => 'nullable|string',
             'program'     => 'required|string',
             'level'     => 'required|string',
-            'file'        => 'nullable|mimes:pdf,doc,docx,ppt,pptx,txt|max:5000',
+            'file' => 'required|mimes:pdf,doc,docx,ppt,pptx,xls,xlsx,zip|max:2097152',
         ]);
 
         // If new file uploaded, replace the old one
