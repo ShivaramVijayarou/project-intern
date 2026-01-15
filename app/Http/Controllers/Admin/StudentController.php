@@ -31,8 +31,8 @@ class StudentController extends Controller
                 $query->where('program', $program);
             })
             ->when($batchCode, function ($query, $batchCode) {
-            $query->where('batch_code', 'like', "%{$batchCode}%");
-        })
+                $query->where('batch_code', 'like', "%{$batchCode}%");
+            })
 
 
             ->where('role', 'user') // only show students
@@ -46,33 +46,33 @@ class StudentController extends Controller
     }
 
 
-   public function exportPdf(Request $request)
-{
-    $search = $request->input('search');
-    $program = $request->input('program');
-    $batchCode = $request->input('batch_code');
+    public function exportPdf(Request $request)
+    {
+        $search = $request->input('search');
+        $program = $request->input('program');
+        $batchCode = $request->input('batch_code');
 
-    $students = User::query()
-        ->when($search, function ($query, $search) {
-            $query->where(function ($q) use ($search) {
-                $q->where('name', 'like', "%{$search}%")
-                  ->orWhere('ic', 'like', "%{$search}%");
-            });
-        })
-        ->when($program, function ($query, $program) {
-            $query->where('program', $program);
-        })
-        ->when($batchCode, function ($query, $batchCode) {
-            $query->where('batch_code', 'like', "%{$batchCode}%");
-        })
-        ->where('role', 'user')
-        ->orderBy('name', 'asc')
-        ->get();
+        $students = User::query()
+            ->when($search, function ($query, $search) {
+                $query->where(function ($q) use ($search) {
+                    $q->where('name', 'like', "%{$search}%")
+                        ->orWhere('ic', 'like', "%{$search}%");
+                });
+            })
+            ->when($program, function ($query, $program) {
+                $query->where('program', $program);
+            })
+            ->when($batchCode, function ($query, $batchCode) {
+                $query->where('batch_code', 'like', "%{$batchCode}%");
+            })
+            ->where('role', 'user')
+            ->orderBy('name', 'asc')
+            ->get();
 
-    $pdf = Pdf::loadView('admin.student.pdf', compact('students'));
+        $pdf = Pdf::loadView('admin.student.pdf', compact('students'));
 
-    return $pdf->download('student_list.pdf');
-}
+        return $pdf->download('student_list.pdf');
+    }
 
     public function create()
     {
@@ -100,6 +100,8 @@ class StudentController extends Controller
             'address'      => 'nullable|string|max:255',
             'level'      => 'nullable|string|max:255',
             'profileimage' => 'nullable|image|mimes:jpg,jpeg,png|max:3000',
+            'start_date' => 'required|date',
+            'end_date' => 'required|date|after_or_equal:start_date',
             'status'       => 'required|in:active,inactive',
         ]);
 
@@ -123,6 +125,8 @@ class StudentController extends Controller
             'profileimage' => $photoPath ?? 'uploads/profile.png',
             'role'         => 'user',
             'status'       => $request->status,
+            'start_date' => $request->start_date,
+            'end_date' => $request->end_date,
             'password'     => Hash::make('student123'), // default password
         ]);
 
@@ -131,13 +135,7 @@ class StudentController extends Controller
     }
 
 
-    // View student info
-    // public function show($id)
-    // {
-    //     $user = User::findOrFail($id);
 
-    //     return view('admin.students.show', compact('student'));
-    // }
 
     public function show($id)
     {
@@ -169,6 +167,8 @@ class StudentController extends Controller
             'level'     => 'required|string',
             'phoneNo'    => 'nullable|string|max:20',
             'address'    => 'nullable|string|max:255',
+            'start_date' => 'required|date',
+            'end_date'   => 'required|date|after_or_equal:start_date',
             'status'     => 'required|in:active,inactive',
             'profileimage'      => 'nullable|image|mimes:jpg,jpeg,png|max:3000',
         ]);
@@ -191,6 +191,8 @@ class StudentController extends Controller
             'program'    => $request->program,
             'level'    => $request->level,
             'status'     => $request->status,
+            'start_date' => $request->start_date,
+            'end_date'   => $request->end_date,
             'profileimage' => $student->profileimage, // keep updated photo
         ]);
 

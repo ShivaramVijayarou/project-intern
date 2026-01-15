@@ -22,7 +22,9 @@ return new class extends Migration
             $table->string('address')->nullable();
             $table->string('ic')->unique()->nullable();
             $table->string('program')->nullable();
-             $table->string('level')->nullable();
+            $table->string('level')->nullable();
+            $table->date('start_date')->nullable()->after('level');
+            $table->date('end_date')->nullable()->after('start_date');
             $table->string('status')->default('active');
             $table->rememberToken();
             $table->timestamps();

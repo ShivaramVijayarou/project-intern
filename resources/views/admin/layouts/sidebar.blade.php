@@ -109,7 +109,13 @@
 
              <li class="{{ request()->routeIs('admin.info.*') ? 'active' : '' }}">
                 <a class="nav-link" href="{{ route('admin.info.index') }}">
-                    <i class="fa-solid fa-book"></i><span>Info KTM</span>
+                    <i class="fas fa-book"></i><span>Info KTM</span>
+                </a>
+            </li>
+
+             <li class="{{ request()->routeIs('admin.leaveform.*') ? 'active' : '' }}">
+                <a class="nav-link" href="{{ route('admin.leaveform.index') }}">
+                    <i class="fas fa-calendar"></i><span>Leave Form</span>
                 </a>
             </li>
         </ul>

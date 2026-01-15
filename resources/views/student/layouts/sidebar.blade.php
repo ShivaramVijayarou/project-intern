@@ -83,6 +83,13 @@
            {{ request()->routeIs('student.info') ? 'bg-blue-100 text-blue-600' : 'hover:bg-gray-200 text-gray-700' }}">
             <i class="fa-solid fa-book w-5 h-5 mr-3"></i>Info KTM
         </a>
+
+         <a href="{{ route('student.leaveform') }}"
+           class="flex items-center w-full p-3 rounded-lg transition
+           {{ request()->routeIs('student.leaveform') ? 'bg-blue-100 text-blue-600' : 'hover:bg-gray-200 text-gray-700' }}">
+            <i class="fas fa-user w-5 h-5 mr-3"></i> Leave Form
+        </a>
+
     </div>
 </div>
 
@@ -98,6 +105,14 @@
            {{ request()->routeIs('student.profile') ? 'bg-blue-100 text-blue-600' : 'hover:bg-gray-200 text-gray-700' }}">
             <i class="fas fa-user w-5 h-5 mr-3"></i> Profile
         </a>
+
+         <a href="{{ route('student.attendance') }}"
+           class="flex items-center w-full p-3 rounded-lg transition
+           {{ request()->routeIs('student.attendance') ? 'bg-blue-100 text-blue-600' : 'hover:bg-gray-200 text-gray-700' }}">
+            <i class="fas fa-user w-5 h-5 mr-3"></i> Attendance
+        </a>
+
+
     </nav>
 
     <!-- Logout Button -->

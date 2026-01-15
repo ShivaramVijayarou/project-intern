@@ -94,6 +94,25 @@
                                 <small class="text-danger">{{ $message }}</small>
                             @enderror
                         </div>
+                        
+                        {{-- Study Period --}}
+                            <div class="form-group">
+                                <label for="start_date">Study Start Date</label>
+                                <input type="date" id="start_date" name="start_date" class="form-control"
+                                    value="{{ old('start_date') }}" required>
+                                @error('start_date')
+                                    <small class="text-danger">{{ $message }}</small>
+                                @enderror
+                            </div>
+
+                            <div class="form-group">
+                                <label for="end_date">Study End Date</label>
+                                <input type="date" id="end_date" name="end_date" class="form-control"
+                                    value="{{ old('end_date') }}" required>
+                                @error('end_date')
+                                    <small class="text-danger">{{ $message }}</small>
+                                @enderror
+                            </div>
 
                         {{-- Status --}}
                         <div class="form-group">
@@ -113,37 +132,35 @@
                             <label for="program">Program</label>
                             <select name="program" class="form-control" required>
                                 <option value="">-- Select Program --</option>
-                                <option value="Kemahiran Elektrik">-- Kemahiran Elektrik --</option>
-                                <option value="Kemahiran Mekatronik">-- Kemahiran Mekatronik --</option>
-                                {{-- @foreach ($programs as $program)
-                                    <option value="{{ $program }}"
-                                        {{ old('program') == $program ? 'selected' : '' }}>
-                                        {{ strtoupper($program) }}
-                                    </option>
-                                @endforeach --}}
+                                 <option value="Kemahiran Elektrik">-- Kemahiran Elektrik --</option>
+                                  <option value="Kemahiran Mekatronik">-- Kemahiran Mekatronik --</option>
+
                             </select>
                             @error('program')
                                 <small class="text-danger">{{ $message }}</small>
                             @enderror
                         </div>
 
-
-                        {{-- Level --}}
+                       {{-- Level --}}
                         <div class="form-group">
                             <label for="level">Level</label>
                             <select id="level" name="level" class="form-control" required>
                                 <option value="">-- Select Level --</option>
-                                <option value="Level 2" {{ old('level 2') == 'Level 2' ? 'selected' : '' }}>
+                                <option value="Level 2"
+                                    {{ old('level 2') == 'Level 2' ? 'selected' : '' }}>
                                     Level 2
                                 </option>
-                                <option value="Level 3" {{ old('level 3') == 'Level 3' ? 'selected' : '' }}>
+                                <option value="Level 3"
+                                    {{ old('level 3') == 'Level 3' ? 'selected' : '' }}>
                                     Level 3
                                 </option>
-                                <option value="Level 4" {{ old('level 4') == 'Level 4' ? 'selected' : '' }}>
+                                <option value="Level 4"
+                                    {{ old('level 4') == 'Level 4' ? 'selected' : '' }}>
                                     Level 4
                                 </option>
                             </select>
                         </div>
+
 
                         {{-- Default Password Note --}}
                         <div class="form-group">

@@ -9,6 +9,7 @@ use App\Http\Controllers\Admin\StudentController;
 use App\Http\Controllers\Admin\ElibraryController;
 use App\Http\Controllers\Admin\KaunselingController;
 use App\Http\Controllers\Admin\InfoController;
+use App\Http\Controllers\Admin\LeaveFormController;
 use App\Http\Controllers\Admin\ResultController;
 use App\Http\Controllers\Admin\AttendanceController;
 use App\Http\Controllers\Staff\StaffDashboardController;
@@ -20,9 +21,11 @@ use App\Http\Controllers\Student\StudentELibraryController;
 use App\Http\Controllers\Student\StudentKaunselingController;
 use App\Http\Controllers\Student\StudentInfoController;
 use App\Http\Controllers\Student\StudentResultController;
+use App\Http\Controllers\Student\StudentAttendanceController;
+use App\Http\Controllers\Student\StudentLeaveController;
 use App\Http\Controllers\Auth\PasswordResetLinkController;
 use App\Http\Controllers\Auth\NewPasswordController;
-
+use App\Models\LeaveForm;
 
 /*
 |--------------------------------------------------------------------------
@@ -81,6 +84,21 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::put('admin/profile/password', [ProfileController::class, 'updatePassword'])->name('admin.profile.password.update');
 
 
+    //Attendance
+    Route::get('/admin/attendance/student/{student}',[AttendanceController::class, 'studentSummary'])
+    ->name('admin.attendance.summary');
+
+    Route::get('admin/attendance/report/{student}',[AttendanceController::class, 'attendanceReport'])->name('admin.attendance.pdf');
+
+    Route::get('admin/attendance/batchprint',[AttendanceController::class, 'batchPdf'])->name('admin.attendance.batchpdf');
+
+//     Route::get('/admin/attendance/batchpdf',[AttendanceController::class, 'batchPdf'])->name('admin.attendance.batchpdf');
+
+// Route::get('admin/attendance/pdf/batch/{batch_code?}',[AttendanceController::class, 'batchPdf'])->name('admin.attendance.batchpdf');
+// Route::resource('attendance', AttendanceController::class)->except(['show']);
+
+
+
 Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->group(function () {
     Route::get('dashboard', [AdminDashboardController::class, 'index'])->name('dashboard');
     Route::resource('students', StudentController::class);
@@ -91,6 +109,8 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
     Route::resource('info', InfoController::class);
     Route::resource('result', ResultController::class);
     Route::resource('attendance', AttendanceController::class);
+    Route::resource('leaveform', LeaveFormController::class);
+
 
 
 });
@@ -109,6 +129,8 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
          Route::resource('info', InfoController::class);
          Route::resource('result', ResultController::class);
         Route::resource('attendance', AttendanceController::class);
+        Route::resource('leaveform', LeaveFormController::class);
+
     });
 
 
@@ -141,6 +163,8 @@ Route::middleware(['auth', 'role:user'])->group(function () {
    Route::get('/student/kaunseling', [StudentKaunselingController::class, 'index'])->name('student.kaunseling');
     Route::get('/student/info', [StudentInfoController::class, 'index'])->name('student.info');
     Route::get('/student/result', [StudentResultController::class, 'index'])->name('student.result');
+     Route::get('/student/attendance', [StudentAttendanceController::class, 'myAttendance'])->name('student.attendance');
+   Route::get('/student/leaveform', [StudentLeaveController::class, 'index'])->name('student.leaveform');
 
 });
 

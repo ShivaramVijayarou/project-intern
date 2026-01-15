@@ -20,6 +20,23 @@
     <!-- /END GA -->
 </head>
 
+<style>
+ .pagination {
+    justify-content: center !important;
+    gap: 5px;
+}
+
+.pagination li {
+    float: none !important;
+}
+
+.pagination .page-item:first-child,
+.pagination .page-item:last-child {
+    position: static !important;
+}
+            
+    </style>
+
 <body>
     <div id="app">
         <div class="main-wrapper main-wrapper-1">

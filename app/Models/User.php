@@ -31,6 +31,8 @@ class User extends Authenticatable
         'ic',
         'program',
         'level',
+        'start_date',
+        'end_date',
         'status',
     ];
 
@@ -43,6 +45,11 @@ class User extends Authenticatable
         'password',
         'remember_token',
     ];
+
+    protected $casts = [
+    'start_date' => 'date',
+    'end_date'   => 'date',
+];
 
     /**
      * Get the attributes that should be cast.
@@ -62,7 +69,5 @@ public function scopeStudents($query)
 {
     return $query->where('role', 'student');
 }
-
-
 
 }
