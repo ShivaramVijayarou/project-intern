@@ -71,6 +71,14 @@
                 </a>
             </li>
 
+            <li>
+             <li class="{{ request()->routeIs('admin.staff') ? 'active' : '' }}">
+                <a class="nav-link" href="{{ route('admin.staff') }}">
+
+                    <i class="fas fa-user-graduate"></i> <span>Staff Registration</span>
+                </a>
+            </li>
+
             <li class="{{ request()->routeIs('admin.exams.*') ? 'active' : '' }}">
                 <a class="nav-link" href="{{ route('admin.exams.index') }}">
                     <i class="fas fa-th"></i> <span>Examination Detail</span>
@@ -83,12 +91,7 @@
                 </a>
             </li>
 
-             {{-- <li class="{{ request()->routeIs('admin.elibrary.*') ? 'active' : '' }}">
-                <a class="nav-link" href="{{ route('admin.elibrary.index') }}">
-                <i class="fas fa-book-open"></i> <span>E-Library</span>
-                </a>
-            </li> --}}
-
+             
 
              {{-- ✅ New Services Dropdown --}}
     <li class="nav-item dropdown {{ request()->routeIs('admin.elibrary.*') || request()->routeIs('admin.kaunseling.*') ? 'active' : '' }}">

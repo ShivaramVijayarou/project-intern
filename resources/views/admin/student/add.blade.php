@@ -94,7 +94,7 @@
                                 <small class="text-danger">{{ $message }}</small>
                             @enderror
                         </div>
-                        
+
                         {{-- Study Period --}}
                             <div class="form-group">
                                 <label for="start_date">Study Start Date</label>
@@ -113,6 +113,7 @@
                                     <small class="text-danger">{{ $message }}</small>
                                 @enderror
                             </div>
+
 
                         {{-- Status --}}
                         <div class="form-group">
@@ -171,7 +172,85 @@
                             </small>
                         </div>
 
-                        <button class="btn btn-primary" type="submit">Add Student</button>
+
+
+
+
+
+                        <!-- ===================== PARENT DETAILS SECTION ===================== -->
+
+                        <div class="my-4 text-center">
+                            <hr style="border-top: 2px solid #ddd; width: 100%;">
+                            <h3 class="text-muted">Parent / Guardian Details</h3>
+                        </div>
+
+
+                        <div class="card-body">
+                            <div class="row">
+
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label>Name</label>
+                                        <input type="text" name="parent_name" class="form-control" required>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label>Relationship</label>
+                                        <select name="parent_relationship" class="form-control">
+                                            <option value="">Select Relationship</option>
+                                            <option value="Father">Father</option>
+                                            <option value="Mother">Mother</option>
+                                            <option value="Guardian">Guardian</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label>Phone Number</label>
+                                        <input type="text" name="parent_phone" class="form-control" required>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label>Email</label>
+                                        <input type="email" name="parent_email" class="form-control">
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label>Occupation</label>
+                                        <input type="text" name="parent_occupation" class="form-control" required>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <label>Salary (RM)</label>
+                                    <input type="number" name="salary" class="form-control" placeholder="e.g. 3500">
+                                </div>
+
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <label>Address</label>
+                                        <textarea name="parent_address" class="form-control" rows="3"></textarea>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                </div>
+            </div>
+
+            <div class="card-footer text-right">
+                <button type="submit" class="btn btn-primary">
+                    <i class="fas fa-save"></i> Save Student & Parents
+                </button>
+            </div>
+
                     </form>
                 </div>
             </div>

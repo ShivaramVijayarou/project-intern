@@ -98,7 +98,13 @@
 
                                     <td>{{ $student->student_id }}</td>
                                     <td>{{ $student->batch_code }}</td>
-                                    <td>{{ ucwords(strtolower($student->name)) }}</td>
+                                    {{-- <td>{{ ucwords(strtolower($student->name)) }}</td> --}}
+
+                                    <td>
+                                        <a href="{{ route('admin.students.show', $student->id) }}">
+                                            {{ ucwords(strtolower($student->name)) }}
+                                        </a>
+                                    </td>
                                     <td>{{ $student->email }}</td>
                                     <td>{{ $student->phoneNo }}</td>
                                     <td>{{ $student->address }}</td>
@@ -145,6 +151,11 @@
 
                     </table>
                 </div>
+
+
+
+
+
 
                 <!-- Pagination -->
                 <div class="d-flex justify-content-center mt-3">

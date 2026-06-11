@@ -26,6 +26,17 @@ return new class extends Migration
             $table->date('start_date')->nullable()->after('level');
             $table->date('end_date')->nullable()->after('start_date');
             $table->string('status')->default('active');
+
+    $table->string('parent_name')->nullable();
+    $table->string('parent_relationship')->nullable();
+    $table->string('parent_phone')->nullable();
+    $table->string('parent_email')->nullable();
+    $table->string('parent_occupation')->nullable();
+    $table->decimal('salary', 10, 2)->nullable();
+    $table->string('parent_address')->nullable();
+
+
+
             $table->rememberToken();
             $table->timestamps();
         });

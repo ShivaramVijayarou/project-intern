@@ -34,7 +34,20 @@ class User extends Authenticatable
         'start_date',
         'end_date',
         'status',
+        'parent_name',
+        'parent_relationship',
+        'parent_phone',
+        'parent_email',
+        'parent_occupation',
+        'salary',
+        'parent_address',
     ];
+    
+protected $casts = [
+    'start_date' => 'date',
+    'end_date'   => 'date',
+];
+
 
     /**
      * The attributes that should be hidden for serialization.
@@ -46,10 +59,7 @@ class User extends Authenticatable
         'remember_token',
     ];
 
-    protected $casts = [
-    'start_date' => 'date',
-    'end_date'   => 'date',
-];
+
 
     /**
      * Get the attributes that should be cast.

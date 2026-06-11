@@ -9,9 +9,10 @@ use App\Http\Controllers\Admin\StudentController;
 use App\Http\Controllers\Admin\ElibraryController;
 use App\Http\Controllers\Admin\KaunselingController;
 use App\Http\Controllers\Admin\InfoController;
-use App\Http\Controllers\Admin\LeaveFormController;
 use App\Http\Controllers\Admin\ResultController;
 use App\Http\Controllers\Admin\AttendanceController;
+use App\Http\Controllers\Admin\LeaveFormController;
+use App\Http\Controllers\Admin\StaffController;
 use App\Http\Controllers\Staff\StaffDashboardController;
 use App\Http\Controllers\Student\StudentDashboardController;
 use App\Http\Controllers\Student\StudentProfileController;
@@ -25,7 +26,7 @@ use App\Http\Controllers\Student\StudentAttendanceController;
 use App\Http\Controllers\Student\StudentLeaveController;
 use App\Http\Controllers\Auth\PasswordResetLinkController;
 use App\Http\Controllers\Auth\NewPasswordController;
-use App\Models\LeaveForm;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -71,10 +72,12 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::get('student', [StudentController::class, 'index'])->name('admin.student');
     Route::get('/student/create', [StudentController::class, 'create'])->name('students.create');
     Route::post('/student/store', [StudentController::class, 'store'])->name('students.store');
+    Route::get('/students/{id}', [StudentController::class, 'show'])->name('students.show');
     Route::delete('/students/{id}', [StudentController::class, 'destroy'])->name('students.destroy');
     Route::get('/admin/students/{id}/edit', [StudentController::class, 'edit'])->name('admin.students.edit');
     Route::put('/admin/students/{id}', [StudentController::class, 'update'])->name('admin.students.update');
     Route::get('/admin/students/pdf', [StudentController::class, 'exportPdf'])->name('admin.students.pdf');
+
 
 
 
@@ -84,33 +87,30 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::put('admin/profile/password', [ProfileController::class, 'updatePassword'])->name('admin.profile.password.update');
 
 
-    //Attendance
-    Route::get('/admin/attendance/student/{student}',[AttendanceController::class, 'studentSummary'])
-    ->name('admin.attendance.summary');
-
+     //Attendance
+    Route::get('/admin/attendance/student/{student}',[AttendanceController::class, 'studentSummary'])->name('admin.attendance.summary');
     Route::get('admin/attendance/report/{student}',[AttendanceController::class, 'attendanceReport'])->name('admin.attendance.pdf');
-
     Route::get('admin/attendance/batchprint',[AttendanceController::class, 'batchPdf'])->name('admin.attendance.batchpdf');
 
-//     Route::get('/admin/attendance/batchpdf',[AttendanceController::class, 'batchPdf'])->name('admin.attendance.batchpdf');
-
-// Route::get('admin/attendance/pdf/batch/{batch_code?}',[AttendanceController::class, 'batchPdf'])->name('admin.attendance.batchpdf');
-// Route::resource('attendance', AttendanceController::class)->except(['show']);
-
+    // Staff registration
+ Route::get('staff', [StaffController::class, 'index'])->name('admin.staff');
+    Route::get('/staff/create', [StaffController::class, 'create'])->name('admin.create');
+    Route::post('/staff/store', [StaffController::class, 'store'])->name('admin.store');
+   
 
 
 Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->group(function () {
     Route::get('dashboard', [AdminDashboardController::class, 'index'])->name('dashboard');
     Route::resource('students', StudentController::class);
+    Route::resource('staff', StaffController::class);
     Route::resource('notes', NoteController::class);
     Route::resource('exams', ExamController::class);
     Route::resource('elibrary', ElibraryController::class);
     Route::resource('kaunseling', KaunselingController::class);
     Route::resource('info', InfoController::class);
-    Route::resource('result', ResultController::class);
-    Route::resource('attendance', AttendanceController::class);
-    Route::resource('leaveform', LeaveFormController::class);
-
+  Route::resource('result', ResultController::class);
+  Route::resource('attendance', AttendanceController::class);
+  Route::resource('leaveform', LeaveFormController::class);
 
 
 });
@@ -127,14 +127,13 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
         Route::resource('Elibrary', ElibraryController::class);
          Route::resource('kaunseling', KaunselingController::class);
          Route::resource('info', InfoController::class);
-         Route::resource('result', ResultController::class);
-        Route::resource('attendance', AttendanceController::class);
-        Route::resource('leaveform', LeaveFormController::class);
-
+      Route::resource('result', ResultController::class);
+       Route::resource('attendance', AttendanceController::class);
+       Route::resource('leaveform', LeaveFormController::class);
     });
 
 
-
+    // Admin Library
 
 });
 
@@ -143,10 +142,10 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
 | Staff Routes
 |--------------------------------------------------------------------------
 */
-Route::middleware(['auth', 'role:staff'])->group(function () {
-    Route::get('staff/dashboard', [StaffDashboardController::class, 'index'])
-        ->name('staff.dashboard');
-});
+// Route::middleware(['auth', 'role:staff'])->group(function () {
+//     Route::get('staff/dashboard', [StaffDashboardController::class, 'index'])
+//         ->name('staff.dashboard');
+// });
 
 /*
 |--------------------------------------------------------------------------
@@ -162,9 +161,11 @@ Route::middleware(['auth', 'role:user'])->group(function () {
    Route::get('/student/elibrary', [StudentELibraryController::class, 'index'])->name('student.elibrary');
    Route::get('/student/kaunseling', [StudentKaunselingController::class, 'index'])->name('student.kaunseling');
     Route::get('/student/info', [StudentInfoController::class, 'index'])->name('student.info');
-    Route::get('/student/result', [StudentResultController::class, 'index'])->name('student.result');
-     Route::get('/student/attendance', [StudentAttendanceController::class, 'myAttendance'])->name('student.attendance');
-   Route::get('/student/leaveform', [StudentLeaveController::class, 'index'])->name('student.leaveform');
+ Route::get('/student/result', [StudentResultController::class, 'index'])->name('student.result');
+  Route::get('/student/leaveform', [StudentLeaveController::class, 'index'])->name('student.leaveform');
+
+
+
 
 });
 

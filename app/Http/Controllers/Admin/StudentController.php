@@ -3,17 +3,13 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Contracts\View\View;
 use Illuminate\Http\Request;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 use Barryvdh\DomPDF\Facade\Pdf;
 
-
 class StudentController extends Controller
 {
-
-
     public function index(Request $request)
     {
         $search = $request->input('search');
@@ -24,72 +20,31 @@ class StudentController extends Controller
             ->when($search, function ($query, $search) {
                 $query->where(function ($q) use ($search) {
                     $q->where('name', 'like', "%{$search}%")
-                        ->orWhere('ic', 'like', "%{$search}%");
+                      ->orWhere('ic', 'like', "%{$search}%");
                 });
             })
-            ->when($program, function ($query, $program) {
-                $query->where('program', $program);
-            })
-            ->when($batchCode, function ($query, $batchCode) {
-                $query->where('batch_code', 'like', "%{$batchCode}%");
-            })
-
-
-            ->where('role', 'user') // only show students
-            ->orderBy('name', 'asc') // <-- sort alphabetically by name
-            ->paginate(30); // optional pagination
-
+            ->when($program, fn($query) => $query->where('program', $program))
+            ->when($batchCode, fn($query) => $query->where('batch_code', 'like', "%{$batchCode}%"))
+            ->where('role', 'user')
+            ->orderBy('name', 'asc')
+            ->paginate(30);
 
         $programs = User::where('role', 'user')->distinct()->pluck('program');
 
         return view('admin.student.index', compact('students', 'programs'));
     }
 
-
-    public function exportPdf(Request $request)
-    {
-        $search = $request->input('search');
-        $program = $request->input('program');
-        $batchCode = $request->input('batch_code');
-
-        $students = User::query()
-            ->when($search, function ($query, $search) {
-                $query->where(function ($q) use ($search) {
-                    $q->where('name', 'like', "%{$search}%")
-                        ->orWhere('ic', 'like', "%{$search}%");
-                });
-            })
-            ->when($program, function ($query, $program) {
-                $query->where('program', $program);
-            })
-            ->when($batchCode, function ($query, $batchCode) {
-                $query->where('batch_code', 'like', "%{$batchCode}%");
-            })
-            ->where('role', 'user')
-            ->orderBy('name', 'asc')
-            ->get();
-
-        $pdf = Pdf::loadView('admin.student.pdf', compact('students'));
-
-        return $pdf->download('student_list.pdf');
-    }
-
     public function create()
     {
-        // Get all distinct programs from exams table (or you can create a separate programs table later)
         $programs = User::distinct()->pluck('program');
-
         return view('admin.student.add', compact('programs'));
     }
 
-
-
-
-
-    //Store new Student
     public function store(Request $request)
     {
-        $request->validate([
+        // Validate all student + parent fields
+        $validated = $request->validate([
+            // Student fields
             'student_id'   => 'required|unique:users,student_id',
             'batch_code'   => 'nullable|string|max:100',
             'name'         => 'required|string|max:255',
@@ -98,60 +53,63 @@ class StudentController extends Controller
             'program'      => 'required|string|max:100',
             'phoneNo'      => 'nullable|string|max:20',
             'address'      => 'nullable|string|max:255',
-            'level'      => 'nullable|string|max:255',
+            'level'        => 'nullable|string|max:255',
             'profileimage' => 'nullable|image|mimes:jpg,jpeg,png|max:3000',
-            'start_date' => 'required|date',
-            'end_date' => 'required|date|after_or_equal:start_date',
+            'start_date'   => 'required|date',
+            'end_date'     => 'required|date|after_or_equal:start_date',
             'status'       => 'required|in:active,inactive',
+
+            // Parent fields
+            'parent_name'        => 'required|string|max:255',
+            'parent_phone'       => 'required|string|max:20',
+            'parent_relationship'=> 'nullable|string|max:50',
+            'parent_email'       => 'nullable|email',
+            'parent_address'     => 'nullable|string|max:255',
+            'parent_occupation'  => 'nullable|string|max:255',
+            'salary'             => 'nullable|numeric|min:0',
         ]);
 
-        $photoPath = null;
-
-        if ($request->hasFile('profileimage')) {
-            // Store only relative path like "students/xxx.jpg"
-            $photoPath = $request->file('profileimage')->store('students', 'public');
-        }
+        $photoPath = $request->hasFile('profileimage')
+            ? $request->file('profileimage')->store('students', 'public')
+            : 'uploads/profile.png';
 
         User::create([
-            'student_id'   => $request->student_id,
-            'batch_code'   => $request->batch_code,
-            'name'         => $request->name,
-            'email'        => $request->email,
-            'phoneNo'      => $request->phoneNo,
-            'address'      => $request->address,
-            'ic'           => $request->ic,
-            'program'      => $request->program,
-            'level'        => $request->level,
-            'profileimage' => $photoPath ?? 'uploads/profile.png',
-            'role'         => 'user',
-            'status'       => $request->status,
-            'start_date' => $request->start_date,
-            'end_date' => $request->end_date,
-            'password'     => Hash::make('student123'), // default password
+            // Student
+            'student_id' => $validated['student_id'],
+            'batch_code' => $validated['batch_code'] ?? null,
+            'name'       => $validated['name'],
+            'email'      => $validated['email'],
+            'phoneNo'    => $validated['phoneNo'] ?? null,
+            'address'    => $validated['address'] ?? null,
+            'ic'         => $validated['ic'],
+            'program'    => $validated['program'],
+            'level'      => $validated['level'] ?? null,
+            'profileimage'=> $photoPath,
+            'role'       => 'user',
+            'status'     => $validated['status'],
+            'start_date' => $validated['start_date'],
+            'end_date'   => $validated['end_date'],
+            'password'   => Hash::make(config('constants.default_student_password', 'student123')),
+
+            // Parent
+            'parent_name'         => $validated['parent_name'],
+            'parent_relationship' => $validated['parent_relationship'] ?? null,
+            'parent_phone'        => $validated['parent_phone'],
+            'parent_email'        => $validated['parent_email'] ?? null,
+            'parent_address'      => $validated['parent_address'] ?? null,
+            'parent_occupation'   => $validated['parent_occupation'] ?? null,
+            'salary'              => $validated['salary'] ?? null,
         ]);
 
         return redirect()->route('admin.students.index')
-            ->with('success', 'Student added successfully!');
+                         ->with('success', 'Student and parent details saved successfully!');
     }
 
-
-
-
-    public function show($id)
-    {
-        $student = User::findOrFail($id); // fetch student by ID
-        return view('admin.student.view', compact('student'));
-    }
-
-
-
-    // Edit student info
     public function edit($id)
     {
-        $student = User::findOrFail($id); // Get student by ID
+        $student = User::findOrFail($id);
         return view('admin.student.edit', compact('student'));
     }
-
 
     public function update(Request $request, $id)
     {
@@ -159,64 +117,60 @@ class StudentController extends Controller
 
         $validated = $request->validate([
             'student_id' => 'required|unique:users,student_id,' . $student->id,
-            'batch_code'   => 'nullable|string|max:100|regex:/^[A-Z0-9\-:()]+$/i',
+            'batch_code' => 'nullable|string|max:100',
             'name'       => 'required|string|max:255',
             'email'      => 'required|email|unique:users,email,' . $student->id,
-            'ic'          => 'required|string|regex:/^\d{6}-\d{2}-\d{4}$/|unique:users,ic,' . $student->id,
-            'program'    => 'required|in:Kemahiran Elektrik,Kemahiran Mekatronik',
-            'level'     => 'required|string',
+            'ic'         => 'required|string|regex:/^\d{6}-\d{2}-\d{4}$/|unique:users,ic,' . $student->id,
+            'program'    => 'required|string',
+            'level'      => 'nullable|string|max:255',
             'phoneNo'    => 'nullable|string|max:20',
             'address'    => 'nullable|string|max:255',
             'start_date' => 'required|date',
             'end_date'   => 'required|date|after_or_equal:start_date',
             'status'     => 'required|in:active,inactive',
-            'profileimage'      => 'nullable|image|mimes:jpg,jpeg,png|max:3000',
+            'profileimage'=> 'nullable|image|mimes:jpg,jpeg,png|max:3000',
+
+            // Parent fields
+            'parent_name'        => 'required|string|max:255',
+            'parent_phone'       => 'required|string|max:20',
+            'parent_relationship'=> 'nullable|string|max:50',
+            'parent_email'       => 'nullable|email',
+            'parent_address'     => 'nullable|string|max:255',
+            'parent_occupation'  => 'nullable|string|max:255',
+            'salary'             => 'nullable|numeric|min:0',
         ]);
 
-        // Handle new photo upload
         if ($request->hasFile('profileimage')) {
             $photoPath = $request->file('profileimage')->store('students', 'public');
             $student->profileimage = $photoPath;
         }
 
-        // Update other fields
-        $student->update([
-            'student_id' => $request->student_id,
-            'batch_code' => $request->batch_code,
-            'name'       => $request->name,
-            'email'      => $request->email,
-            'phoneNo'    => $request->phoneNo,
-            'address'    => $request->address,
-            $student->ic = $validated['ic'],
-            'program'    => $request->program,
-            'level'    => $request->level,
-            'status'     => $request->status,
-            'start_date' => $request->start_date,
-            'end_date'   => $request->end_date,
-            'profileimage' => $student->profileimage, // keep updated photo
-        ]);
+        $student->update($validated);
 
         return redirect()->route('admin.students.index')
-            ->with('success', 'Student updated successfully!');
+                         ->with('success', 'Student and parent details updated successfully!');
     }
 
 
+
+    public function show($id)
+{
+    $student = User::findOrFail($id);
+    return view('admin.student.show', compact('student'));
+}
 
     public function destroy($id)
     {
         $student = User::findOrFail($id);
 
-        // If the student has a profile image and it's not the default, delete it
         if ($student->profileimage && $student->profileimage !== 'uploads/profile.png') {
             $imagePath = public_path($student->profileimage);
-            if (file_exists($imagePath)) {
-                unlink($imagePath);
-            }
+            if (file_exists($imagePath)) unlink($imagePath);
         }
 
         $student->delete();
 
         return redirect()->route('admin.students.index')
-            ->with('success', 'Student deleted successfully!');
+                         ->with('success', 'Student deleted successfully!');
     }
 }

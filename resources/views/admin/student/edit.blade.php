@@ -120,6 +120,8 @@
                                 @enderror
                             </div>
                         </div>
+
+
                         {{-- Program --}}
                         <div class="form-group">
                             <label>Program</label>
@@ -143,15 +145,15 @@
                             <select name="level" class="form-control @error('level') is-invalid @enderror" required>
                                 <option value="">-- Select Level --</option>
                                 <option value="Level 2"
-                                    {{ old('level 2', $student->level) == 'Level 2' ? 'selected' : '' }}>
+                                    {{ old('level', $student->level) == 'Level 2' ? 'selected' : '' }}>
                                     Level 2
                                 </option>
                                 <option value="Level 3"
-                                    {{ old('level 3', $student->level) == 'Level 3' ? 'selected' : '' }}>
+                                    {{ old('level', $student->level) == 'Level 3' ? 'selected' : '' }}>
                                     Level 3
                                 </option>
                                 <option value="Level 4"
-                                    {{ old('level 4', $student->level) == 'Level 4' ? 'selected' : '' }}>
+                                    {{ old('level', $student->level) == 'Level 4' ? 'selected' : '' }}>
                                     Level 4
                                 </option>
                             </select>
@@ -160,10 +162,90 @@
                             @enderror
                         </div>
 
+
+
+
+                        <!-- ===================== PARENT DETAILS ===================== -->
+                        <div class="my-4 text-center">
+                            <hr style="border-top: 2px solid #ddd; width: 100%;">
+                            <h3 class="text-muted">Parent / Guardian Details</h3>
+                        </div>
+
+                        <div class="card-body">
+                            <div class="row">
+
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label>Name</label>
+                                        <input type="text" name="parent_name" class="form-control"
+                                            value="{{ old('parent_name', $student->parent_name) }}" required>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label>Relationship</label>
+                                        <select name="parent_relationship" class="form-control">
+                                            <option value="">Select Relationship</option>
+                                            <option value="Father"
+                                                {{ old('parent_relationship', $student->parent_relationship) == 'Father' ? 'selected' : '' }}>
+                                                Father</option>
+                                            <option value="Mother"
+                                                {{ old('parent_relationship', $student->parent_relationship) == 'Mother' ? 'selected' : '' }}>
+                                                Mother</option>
+                                            <option value="Guardian"
+                                                {{ old('parent_relationship', $student->parent_relationship) == 'Guardian' ? 'selected' : '' }}>
+                                                Guardian</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label>Phone Number</label>
+                                        <input type="text" name="parent_phone" class="form-control"
+                                            value="{{ old('parent_phone', $student->parent_phone) }}" required>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label>Email</label>
+                                        <input type="email" name="parent_email" class="form-control"
+                                            value="{{ old('parent_email', $student->parent_email) }}">
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label>Occupation</label>
+                                        <input type="text" name="parent_occupation" class="form-control"
+                                            value="{{ old('parent_occupation', $student->parent_occupation) }}" required>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <label>Salary (RM)</label>
+                                    <input type="number" step="0.01" name="salary" class="form-control"
+                                        value="{{ old('salary', number_format($student->salary, 2, '.', '')) }}"
+                                        placeholder="e.g. 3500.00">
+                                </div>
+
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <label>Address</label>
+                                        <textarea name="parent_address" class="form-control" rows="3">{{ old('parent_address', $student->parent_address) }}</textarea>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+
+
                         {{-- Submit Button --}}
-                        <div class="text-right">
-                            <button class="btn btn-warning px-4" type="submit">
-                                <i class="fas fa-save"></i> Update Student
+                        <div class="card-footer text-right">
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-save"></i> Update Student & Parents
                             </button>
                         </div>
                     </form>
